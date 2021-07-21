@@ -15,7 +15,7 @@ def get_skills(text):
 
     skills_dict = load_skill_dict()
     skills_ls = list(skills_dict.keys())
-    
+
     p1 = ree.compile(r" \L<words> ", words=skills_ls)
     p2 = ree.compile(r"\t\L<words> ", words=skills_ls)
     p3 = ree.compile(r",\L<words> ", words=skills_ls)
@@ -27,14 +27,14 @@ def get_skills(text):
     p9 = ree.compile(r"\(\L<words>", words=skills_ls)
     p10 = ree.compile(r" \L<words>\)", words=skills_ls)
     p11 = ree.compile(r"\n\L<words>", words=skills_ls)
-    patterns=[p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11]
+    patterns = [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
 
-    found_skills=[]
+    found_skills = []
     for p in patterns:
         found_skills += p.findall(text.lower())
-        
+
     found_skills = [x.strip(' ,\.\t\n/)(') for x in found_skills]
-    
+
     # get the unique skills
     found_skills = sorted(list(set(found_skills)))
     return found_skills
@@ -54,10 +54,9 @@ def get_skill_cat(skill_ls):
     return cats
 
 
-
 def degree_names():
     list_of_postdoc_names = (
-        "Postdoc", 
+        "Postdoc",
         "Postdoctoral Researcher",
         "Research Scientist"
     )
@@ -110,56 +109,49 @@ def degree_names():
         "Bachelor of Engineering",
         "B.Tech ",
         "B.Tech,",
-        "B.Tech-"   
+        "B.Tech-"
     )
 
-    return (list_of_postdoc_names, 
-         list_of_phd_names,
-         list_of_master_names,
-         list_of_bs_names)
+    return (list_of_postdoc_names,
+            list_of_phd_names,
+            list_of_master_names,
+            list_of_bs_names)
 
 
-
-def clean_deg(x, keyword = 'bachelor'):
-    if len(x)>0:
+def clean_deg(x, keyword='bachelor'):
+    if len(x) > 0:
         return keyword
     else:
         return ""
 
 
 def get_skill_education(jd):
-	"""
-	extract education and skills requirements from the job description
+    """
+    extract education and skills requirements from the job description
 
-	return education requirements and skills
-	"""
+    return education requirements and skills
+    """
     import regex as ree
+
     jd = jd.lower()
     skills = get_skills(jd)
-	# posdoc, phd, master, bs
+    # posdoc, phd, master, bs
     degree_list_of_lists = degree_names()
     found_items = []
     for ind, ls in enumerate(degree_list_of_lists):
         p = ree.compile(r"\L<words>", words=[kk.lower() for kk in ls])
         found = p.findall(jd)
-        if len(found)>1:
-            if ind==0:
+        if len(found) > 1:
+            if ind == 0:
                 found_items.append('posdoc')
-            elif ind==1:
+            elif ind == 1:
                 found_items.append('phd')
-            elif ind==2:
+            elif ind == 2:
                 found_items.append('master')
-            elif ind==3:
+            elif ind == 3:
                 found_items.append('bs')
 
     education = ';'.join(found_items)
     skills = ', '.join(skills)
 
     return education, skills
-
-
-
-
-
-
-
