@@ -1,0 +1,599 @@
+Skills,Category
+Baseline,Algorithm
+Data classification,Algorithm
+Distributed Systems,Algorithm
+Enterprise Service Bus,Algorithm
+ESB,Algorithm
+Fibonacci scale,Algorithm
+Finite Element Method,Algorithm
+Finite Volume Method,Algorithm
+Hybrid analytical processing,Algorithm
+Hybrid transactional processing,Algorithm
+K-line,Algorithm
+Multithreading,Algorithm
+Object oriented,Algorithm
+Object-oriented,Algorithm
+Ontology,Algorithm
+Optimization,Algorithm
+Parallel programming,Algorithm
+Recursive InterNetwork Architecture,Algorithm
+Visualization,Algorithm
+Word Processing,Algorithm
+ANN,"Algorithm,Data science"
+Data mining,"Algorithm,Data science"
+Data structures,"Algorithm,Data science"
+Decision Trees,"Algorithm,Data science"
+Deep learning,"Algorithm,Data science"
+Distributed Computing,"Algorithm,Data science"
+Hibernate,"Algorithm,Data science"
+Machine learning,"Algorithm,Data science"
+Machine-learning,"Algorithm,Data science"
+Natuaral Language Processing,"Algorithm,Data science"
+Neural network,"Algorithm,Data science"
+Neural Networks,"Algorithm,Data science"
+NLP,"Algorithm,Data science"
+Object-relational mapping,"Algorithm,Data science"
+Predictive modeling,"Algorithm,Data science"
+Statistical analysis,"Algorithm,Data science"
+Cloud computing,cloud
+Cloud services,cloud
+Excel,Basic
+Microsoft Access,Basic
+Microsoft Office,Basic
+Microsoft Outlook,Basic
+Microsoft Publisher,Basic
+Microsoft Word,Basic
+MS Access,Basic
+MS Outlook,Basic
+MS Word,Basic
+MS-access,Basic
+Powerpoint,Basic
+VBA,Basic
+Visual Basic,Basic
+Windows,Basic
+CorelDRAW,Basic 
+Linear Regression,Basic 
+A-Frame,Data Science
+Active learning,Data Science
+Alewife,Data Science
+Allen,Data Science
+Anaconda,Data Science
+Ark,Data Science
+Beautiful Soup,Data Science
+Behavior tree,Data Science
+Big data,Data science
+Bootstrap,Data science
+Cassandra,Data science
+Conary,Data Science
+Conda,Data Science
+Confabulation,Data Science
+Cross-validation,Data Science
+Cuboid,Data Science
+Data Analytics,Data science
+data modeling,Data science
+Dropout,Data Science
+Druid,Data Science
+Dynamo,Data Science
+Ensemble averaging,Data Science
+Error tolerance,Data Science
+Feed forward,Data Science
+Firebird,Data Science
+Flow control,Data Science
+FOAF,Data Science
+FR-V,Data Science
+Frontera,Data Science
+Gadfly,Data Science
+Gizzard,Data Science
+Hadoop,Data science
+Hekaton,Data Science
+Hibari,Data Science
+Ingres,Data Science
+JFS,Data Science
+Keyspace,Data Science
+LEVAN,Data Science
+LIDA,Data Science
+Logistic Regression,Data science
+Lustre,Data Science
+M-Theory,Data Science
+Macaw,Data Science
+MANIC,Data Science
+Many-to-many,Data Science
+Map Reduce,Data Science
+Mathematical Modeling,Data science
+Mathematical Modelling,Data science
+Meta-Programming,Data science
+Micro-Threads,Data Science
+Moose,Data Science
+NETtalk,Data Science
+Nimbus,Data Science
+Non-Linear Regression,Data science
+NORMA,Data Science
+One-to-many,Data Science
+One-to-one,Data Science
+Pickle,Data Science
+Presenter first,Data Science
+Probability and Statistics,Data science
+QCT,Data Science
+Quality of Data,Data Science
+Range query,Data Science
+Rectifier,Data Science
+Research & Analytic,Data science
+Research & Analytics,Data science
+Research and Analytic,Data science
+Research and Analytics,Data science
+Rhea,Data Science
+scikit-learn,Data science
+Scylla,Data Science
+Semantic analysis,Data Science
+Seriation,Data Science
+SESAM,Data Science
+Shaheen,Data Science
+Spanner,Data Science
+SQL Lite,Data science
+SQLite3,Data science
+Tango,Data Science
+Time-Series Analysis,Data science
+Torch,Data Science
+Transduction,Data Science
+WYSIWYM,Data Science
+Business Process Modeling,Fintech
+Bytecoin,Fintech
+Crowdfunding,Fintech
+Cryptocurrency,Fintech
+Dashboard,Fintech
+Equity Derivative Modeling,Fintech
+Financial Analysis,Fintech
+Financial intelligence,Fintech
+Finite Difference Method,Fintech
+Fintech,Fintech
+Go Software,Fintech
+Gulden,Fintech
+Historical simulation,Fintech
+Risk Modeling,Fintech
+Sidechain,Fintech
+Smart finance management,Fintech
+Stochastic modelling,Fintech
+Taler,Fintech
+Tether,Fintech
+The DAO,Fintech
+Value at Risk,Fintech
+Blockchain,"Fintech,Algorithm"
+Cyber-security,"Fintech,Algorithm"
+Monte Carlo Simulation,"Fintech,Data science"
+Monte Carlo Simulations,"Fintech,Data science"
+Adobe Illustrator,Graphic
+Adobe InDesign,Graphic
+Adobe Photoshop,Graphic
+Art Design,Graphic
+AutoCAD,Graphic
+Corel Draw,Graphic
+Corel Word Perfect,Graphic
+Descartes,Graphic
+Maya,Graphic
+Photoshop,Graphic
+TeraScale,Graphic
+Agile Development,IT
+Agile Project Methodology,IT
+Agora,IT
+Air gap,IT
+Ajax,IT
+Amazon Web Services,IT
+Amazon Web Services (AWS),IT
+Angular,IT
+Apache,IT
+APIs,IT
+ASP,IT
+ASP.net,IT
+AWS,IT
+Babel,IT
+Barracuda,IT
+BONDI,IT
+Canig,IT
+Castor,IT
+Change management,IT
+Classpath,IT
+Client Server,IT
+Client Support,IT
+Conch,IT
+Conversational state,IT
+Crypton,IT
+CSS,IT
+Cuppa,IT
+DAMP,IT
+Django,IT
+Droplets,IT
+DWR,IT
+EIGRP,IT
+Event Management,IT
+Flying Saucer,IT
+Fusebox,IT
+Grail,IT
+Grails,IT
+Griffon,IT
+Grok,IT
+Incident management,IT
+INEK,IT
+Information Architecture,IT
+Information Design,IT
+Information Systems,IT
+Jackson,IT
+Jetty,IT
+Jinja,IT
+Joose,IT
+jQuery,IT
+JVx,IT
+JWt,IT
+Kanban,IT
+Kivy,IT
+Kohana,IT
+LAMP,IT
+Lazarus,IT
+LYME,IT
+Mashup,IT
+Mongrel,IT
+Mustache,IT
+Nagare,IT
+Network Address Translation,IT
+Network Operations,IT
+Non-blocking I/O,IT
+Openbook,IT
+Operational Streamlining,IT
+Optimize Queries on Live Data,IT
+Optimizing User Experiences,IT
+Optimizing Website Performance,IT
+Padrino,IT
+Phalcon,IT
+Point of delivery,IT
+Polyfill,IT
+Port Address Translation,IT
+PRADO,IT
+Puma,IT
+Putty,IT
+Pylons,IT
+Quixote,IT
+Rapha,IT
+Redux,IT
+Rialto,IT
+Rico,IT
+Rollover,IT
+Sandbox,IT
+Scrum,IT
+Security Management,IT
+Service Design Package,IT
+Service Portfolio,IT
+Silex,IT
+Spock,IT
+Squish,IT
+Style sheet,IT
+Swing,IT
+Syslog,IT
+TACTIC,IT
+TFTP Server,IT
+Tinc,IT
+Tinderbox,IT
+Twine,IT
+USAS,IT
+V-Model,IT
+Vapor,IT
+Web architecture,IT
+Web Page Design,IT
+YAML,IT
+Yesod,IT
+A Sharp,Language
+ACC,Language
+Ada,Language
+Agda,Language
+Alef,Language
+Alpha,Language
+AMOS,Language
+APL,Language
+AQL,Language
+Arc,Language
+Axum,Language
+C Sharp,Language
+Cameleon,Language
+Cedar,Language
+Ceylon,Language
+Clojure,Language
+Cobol,Language
+Cobra,Language
+Cuneiform,Language
+Cybil,Language
+Cyclone,Language
+Draco,Language
+ELAN,Language
+Elixir,Language
+Erlang,Language
+Etoys,Language
+F Sharp,Language
+F-Script,Language
+F#,Language
+Fantom,Language
+Flask,Language
+Forsythe,Language
+Forth,Language
+Fortran,Language
+Genshi,Language
+Gofer,Language
+Golo,Language
+Gosu,Language
+Gremlin,Language
+Halide,Language
+Haskell,Language
+Hermes,Language
+HTML,Language
+Hume,Language
+Idris,Language
+J Query,Language
+JADE,Language
+Janus,Language
+Java Script,Language
+Javascript,Language
+Jolie,Language
+JRT,Language
+Julia,Language
+Kojo,Language
+Kotlin,Language
+Limbo,Language
+LINGO,Language
+Lisp,Language
+Little b,Language
+LPC,Language
+Matlab,Language
+Mirah,Language
+MOO,Language
+MySQL,Language
+Newspeak,Language
+Oberon,Language
+Orwell,Language
+ParaSail,Language
+Perl,Language
+PowerHouse,Language
+Pyrex,Language
+Python,Language
+Qalb,Language
+Qore,Language
+Regular Expressions,Language
+Rinda,Language
+Ruby,Language
+SA-C,Language
+Sass,Language
+Smalltalk,Language
+Snap!,Language
+Snowball,Language
+SQLAlchemy,Language
+sqlite,Language
+Squirrel,Language
+Swift,Language
+Tritium,Language
+Uniface,Language
+Vala,Language
+Visual Studio .NET,Language
+XHTML,Language
+XML,Language
+XOD,Language
+XSLT,Language
+Oracle,"Language, Data science"
+Scala,"Language,Data science"
+Spark,"Language,Data science"
+Structural Query Language,"Language,Data science"
+.Net,"Language,Foundations"
+C#,"Language,Foundations"
+C++,"Language,Foundations"
+C/C++,"Language,Foundations"
+J2EE,"Language,Foundations"
+Java,"Language,Foundations"
+SQL,"Language,Foundations,Data science"
+PHP,"Language,IT"
+Alioth,System
+Android,System
+Bash,System
+Copland,System
+Denali,System
+Dyson,System
+Firewall,System
+Gather-scatter,System
+GEOS,System
+Hierarchical File System,System
+Homebrew,System
+iOS,System
+iPhone,System
+Linux,System
+Litmus,System
+Load balancing,System
+Mobile technology,System
+Path analysis,System
+PRODIGAL,System
+Red Storm,System
+SDK,System
+Solaris,System
+UI/UX,System
+Unix,System
+Winner-take-all,System
+ZFS,System
+Activiti,Tool
+Akka,Tool
+Anki,Tool
+Ansible,Tool
+Archi,Tool
+Argus,Tool
+Ariadne,Tool
+Artemis,Tool
+Augur,Tool
+Axess,Tool
+Bamboo,Tool
+Bionic,Tool
+Bitbucket Server,Tool
+Blacklight,Tool
+Blitz,Tool
+Blue Pill,Tool
+BOSH,Tool
+Breezy,Tool
+Cacti,Tool
+Cain and Abel,Tool
+Capistrano,Tool
+Capsa,Tool
+Capybara,Tool
+Ceph,Tool
+Cobbler,Tool
+COLT,Tool
+Computer Telephony Integration,Tool
+Cucumber,Tool
+Dalvik,Tool
+Diaspora,Tool
+Docker,Tool
+Eclipse,Tool
+EclipseIDE,Tool
+ECOCITIES,Tool
+Enyo,Tool
+Ettercap,Tool
+Exergy,Tool
+EyeBeam,Tool
+Finisar,Tool
+Firebug,Tool
+FishEye,Tool
+Fjorm,Tool
+Flyway,Tool
+Foreman,Tool
+Ganglia,Tool
+Gatling,Tool
+Git,Tool
+GIWS,Tool
+Gnash,Tool
+Gyroscope,Tool
+H2O,Tool
+Hamlets,Tool
+HP Open Extensibility Platform,Tool
+Hudson,Tool
+HyperSpace,Tool
+ICAD,Tool
+Infini,Tool
+Infragistics,Tool
+Jasmin,Tool
+Jekyll,Tool
+Jenkins,Tool
+Jira,Tool
+Jive,Tool
+JQT,Tool
+Kallithea,Tool
+Karbon,Tool
+Kismet,Tool
+Kofax,Tool
+Kopano,Tool
+Leaflet,Tool
+Li3,Tool
+Madoka,Tool
+MagLev,Tool
+Mastodon,Tool
+Maximo,Tool
+Meson,Tool
+Metis,Tool
+Microsoft Project,Tool
+Microsoft Visual Studio,Tool
+Midgard,Tool
+Miro,Tool
+Mnemosyne,Tool
+Moai,Tool
+Morphic,Tool
+MS Project,Tool
+Mulgara,Tool
+Mycroft,Tool
+Nagios,Tool
+ND4J,Tool
+NEPOMUK,Tool
+Nessus,Tool
+Netty,Tool
+Nokogiri,Tool
+Obidos,Tool
+Octopussy,Tool
+Onyx,Tool
+OOAD,Tool
+Openview,Tool
+Pantheon,Tool
+Patchwork,Tool
+Pisg,Tool
+Pixie,Tool
+Plone,Tool
+Pluma,Tool
+Primavera,Tool
+Project Grizzly,Tool
+Project Shoal,Tool
+Quod Libet,Tool
+RANCID,Tool
+Ranger,Tool
+Rietveld,Tool
+Sahi,Tool
+Saros,Tool
+SAS,Tool
+Seavus Project Viewer,Tool
+Selenium,Tool
+Shinken,Tool
+Shumway,Tool
+Sinatra,Tool
+Slash,Tool
+Snoop,Tool
+Spacewalk,Tool
+Sphinx,Tool
+Sprog,Tool
+Spyce,Tool
+System Design,Tool
+Taiga,Tool
+Theano,Tool
+Tiller Systems,Tool
+TOPAS,Tool
+TPT,Tool
+Tulip,Tool
+Turbo,Tool
+Tuxedo,Tool
+UML,Tool
+Vertebra,Tool
+Virgo,Tool
+Visone,Tool
+VIVO,Tool
+Wabi,Tool
+Wagtail,Tool
+Wakanda,Tool
+Wilma,Tool
+Wireshark,Tool
+Wubi,Tool
+Yeoman,Tool
+Zarafa,Tool
+Zeitgeist,Tool
+ZMap,Tool
+JumpStart,"Tool, System"
+Logical Volume Manager,"Tool, System"
+Content Management Systems (CMS),Tool
+redshift,Cloud
+Azure,Cloud
+Snowflake,Cloud
+relational database,database
+MS PowerBI,visualization
+Cognos,visualization
+Tableau,visualization
+pytorch,data science
+tensorflow,data science
+computer vision,data science
+artificial intelligence,data science
+opencv,data science
+scikit learn,data science
+scikit-learn,data science
+deep learning,data science
+CNN,data science
+GAN,data science
+auto-encoder,data science
+auto encoder,data science
+image processing,data science
+image recognition,data science
+terraform,data science
+kubernetes,data science
+cuda,IT
+caffe,data science
+mxnet,data science
+nodejs,language
+react,language
+webpack,tool
+machine learning,data science
+postgresql,language
+d3.js,visualization
+google cloud platform,cloud
+kafka,cloud
