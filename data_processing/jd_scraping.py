@@ -111,7 +111,8 @@ def glassdoor_clean(soup):
 
 def parse_jd(soup):
     jd = soup.find('div', {'id': 'JobDescriptionContainer'})
-
+    if not jd:
+        return soup
     children = []
     for ch in jd.findChildren(recursive=False):
         for ch2 in ch.findChildren(recursive=False):
