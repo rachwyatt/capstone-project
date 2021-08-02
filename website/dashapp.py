@@ -1,4 +1,5 @@
 import dash
+import os
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.express as px
@@ -6,46 +7,25 @@ import pandas as pd
 import numpy as np
 import pymysql
 from django_plotly_dash import DjangoDash
+from .models import Jd
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = DjangoDash('JobDashboard')
 
 # fetch the data
-# connection = pymysql.connect(host="job-market.chfeqjbmewii.us-west-1.rds.amazonaws.com",
-#                              user="root",
-#                              password="mads_capstone",
-#                              database="capstone",
-#                              port=3306,
-#                              charset='utf8mb4',
-#                              cursorclass=pymysql.cursors.DictCursor)
-#
-# cursor = connection.cursor()
-# cursor.execute("SELECT * FROM jd LIMIT 100;")
-# table = cursor.fetchall()
-# connection.close()
-#
-# df = pd.json_normalize(table)
+df = pd.DataFrame(Jd.objects.all().values())
 
-# toy data set exploring domain by state
-df = pd.DataFrame({
-    "Domain": ["Healthcare", "Healthcare", "Healthcare", "Healthcare",
-               "Sports", "Sports", "Sports", "Sports",
-               "Public Service", "Public Service", "Public Service", "Public Service",
-               "Business", "Business", "Business", "Business"],
-    "Count": np.random.uniform(low=10, high=300, size=(16,)).round(),
-    "Region": ["West", "Midwest", "South", "North East",
-               "West", "Midwest", "South", "North East",
-               "West", "Midwest", "South", "North East",
-               "West", "Midwest", "South", "North East"]
-})
-
-# bar graph example (could be a map...)
-fig = px.bar(df, x="Domain", y="Count", color="Region", barmode="group", title="Domain by Region (Toy Data Set)")
+# top 100 in demand skills
+df['skill'] = df['skill'].str.split(', ')
+df = df.explode('skill')
+skill_count = df[df['skill'].str.strip()!=''].groupby('skill')['id'].count().reset_index().rename(columns={'id':'count'})
+skill_count = skill_count.sort_values(by='count', ascending=False).iloc[0:50].reset_index().drop(columns='index')
+fig = px.bar(skill_count.sort_values(by='count'), x="count", y="skill", title="Most Requested Skills", orientation='h')
 
 app.layout = html.Div(children=[
     dcc.Graph(
-        id='example-graph',
+        id='skills',
         figure=fig
     )
 ])

@@ -1,8 +1,8 @@
-pyenv
+venv
 *.pyc
 .DS_Store
 .env
-.ipynb-checkpoints
+.ipynb_checkpoints
 .idea/
 dashboard-data-checks.ipynb
 
@@ -11,3 +11,4 @@ dashboard-data-checks.ipynb
 
 # Database
 *.sqlite3
+website/migrations/
