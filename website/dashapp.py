@@ -1,6 +1,3 @@
-# Run this app with `python dashboard.py` and
-# visit http://127.0.0.1:8050/ in your web browser.
-import os
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -8,20 +5,20 @@ import plotly.express as px
 import pandas as pd
 import numpy as np
 import pymysql
+from django_plotly_dash import DjangoDash
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-server = app.server
+app = DjangoDash('JobDashboard')
 
 # fetch the data
 # connection = pymysql.connect(host="job-market.chfeqjbmewii.us-west-1.rds.amazonaws.com",
-#     user="root",
-#     password="mads_capstone",
-#     database="capstone",
-#     port=3306,
-#     charset='utf8mb4',
-#     cursorclass=pymysql.cursors.DictCursor)
+#                              user="root",
+#                              password="mads_capstone",
+#                              database="capstone",
+#                              port=3306,
+#                              charset='utf8mb4',
+#                              cursorclass=pymysql.cursors.DictCursor)
 #
 # cursor = connection.cursor()
 # cursor.execute("SELECT * FROM jd LIMIT 100;")
@@ -52,6 +49,3 @@ app.layout = html.Div(children=[
         figure=fig
     )
 ])
-
-if __name__ == '__main__':
-    app.run_server(debug=True)
