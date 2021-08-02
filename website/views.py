@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import Jd
 
 
 def blogpost(request):
@@ -6,7 +7,8 @@ def blogpost(request):
 
 
 def dashboard(request):
-    return render(request, 'website/dashboard.html', {})
+    jobs = Jd.objects.all()
+    return render(request, 'website/dashboard.html', {'jobs':jobs})
 
 
 def team(request):
