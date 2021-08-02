@@ -2,3 +2,6 @@ pyenv
 *.pyc
 .DS_Store
 .env
+.ipynb-checkpoints
+.idea/
+dashboard-data-checks.ipynb
