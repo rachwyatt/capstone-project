@@ -5,3 +5,9 @@ pyenv
 .ipynb-checkpoints
 .idea/
 dashboard-data-checks.ipynb
+
+# Text backup files
+*.bak
+
+# Database
+*.sqlite3
