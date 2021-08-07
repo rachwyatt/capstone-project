@@ -1,4 +1,14 @@
-pyenv
+venv
 *.pyc
 .DS_Store
 .env
+.ipynb_checkpoints
+.idea/
+dashboard-data-checks.ipynb
+
+# Text backup files
+*.bak
+
+# Database
+*.sqlite3
+website/migrations/
