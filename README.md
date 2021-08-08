@@ -28,11 +28,11 @@ code blocks for commands
 
 ## Authors
 
-Ai Zhong
-contact info 
+* Ai Zhong
+    * contact info 
 
-Rachel Wyatt 
-contact info 
+* Rachel Wyatt 
+    * contact info 
 
-Laiya Lubben
-email: llubben@umich.edu
+* Laiya Lubben
+    * email: llubben@umich.edu
