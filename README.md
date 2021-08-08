@@ -29,7 +29,7 @@ code blocks for commands
 ## Authors
 
 * Ai Zhong
-    * contact info 
+    * email: aizhong@umich.edu
 
 * Rachel Wyatt 
     * contact info 
