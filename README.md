@@ -52,7 +52,7 @@ To present the result in a meaningful way, we built a **dashboard that allow stu
     * email: aizhong@umich.edu
 
 * Rachel Wyatt 
-    * contact info 
+    * email: wyattra@umich.edu
 
 * Laiya Lubben
     * email: llubben@umich.edu
