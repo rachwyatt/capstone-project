@@ -16,23 +16,22 @@ To present the result in a meaningful way, we built a **dashboard that allow stu
 ### Dependencies
 
 * Data manipulation/modeling: 
-    * python-----------3.7.4
-    * pandas-----------0.25.1
-    * nltk-------------3.5
-    * numpy------------1.19.5
-    * regex------------2020.11.13
-    * tqdm-------------4.55.1
-    * scikit-learn-----0.22.2.post1
+    * [python(3.7.4)](https://www.python.org/downloads/release/python-374/)
+    * [pandas(0.25.1)](https://pandas.pydata.org/pandas-docs/version/0.25.1/install.html)
+    * [nltk(3.5)](https://pypi.org/project/nltk/3.5/)
+    * [numpy(1.19.5)](https://pypi.org/project/numpy/1.19.5/)
+    * [tqdm](https://pypi.org/project/tqdm/)
+    * [scikit-learn(0.22.2.post1)](https://pypi.org/project/scikit-learn/0.22.2.post1/)
 * Visualization: 
-    * matplotlib-------3.1.2
-    * seaborn----------0.11.1
-    * pyldavis---------2.1.2
+    * [matplotlib](https://pypi.org/project/matplotlib/)
+    * [seaborn(0.11.1)](https://pypi.org/project/seaborn/)
+    * [pyldavis(2.1.2)](https://pyldavis.readthedocs.io/en/latest/readme.html)
 * Database connection:
-    * pymysql----------1.0.2
+    * [pymysql(1.0.2)](https://pypi.org/project/PyMySQL/)
 
 ### Installing
 
-* The libraries listed above can be install by "pip" command. 
+* The libraries listed above can be install using pip. 
 * Example of installing a pymysql package in jupyter notebook:
 ```
 !pip install pymysql
