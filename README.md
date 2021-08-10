@@ -15,13 +15,28 @@ To present the result in a meaningful way, we built a **dashboard that allow stu
 
 ### Dependencies
 
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
+* Data manipulation/modeling: 
+    * python-----------3.7.4
+    * pandas-----------0.25.1
+    * nltk-------------3.5
+    * numpy------------1.19.5
+    * regex------------2020.11.13
+    * tqdm-------------4.55.1
+    * scikit-learn-----0.22.2.post1
+* Visualization: 
+    * matplotlib-------3.1.2
+    * seaborn----------0.11.1
+    * pyldavis---------2.1.2
+* Database connection:
+    * pymysql----------1.0.2
 
 ### Installing
 
-* How/where to download your program
-* Any modifications needed to be made to files/folders
+* The libraries listed above can be install by "pip" command. 
+* Example of installing a pymysql package in jupyter notebook:
+```
+!pip install pymysql
+```
 
 ### Executing program
 
