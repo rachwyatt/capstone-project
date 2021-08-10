@@ -31,7 +31,7 @@ To present the result in a meaningful way, we built a **dashboard that allow stu
 
 ### Installing
 
-* The libraries listed above can be install using pip. 
+* The libraries listed above include links to the documentations and can be installed using pip. 
 * Example of installing a pymysql package in jupyter notebook:
 ```
 !pip install pymysql
