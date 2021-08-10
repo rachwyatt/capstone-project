@@ -39,11 +39,9 @@ To present the result in a meaningful way, we built a **dashboard that allow stu
 
 ### Executing program
 
-* How to run the program
-* Step-by-step bullets
-```
-code blocks for commands
-```
+* To run the notebooks in the *model_notebooks* folder, you will need to do the following: 
+1. Update the *config.json* file with the database connection information
+2. Download the [Common Crawl (42B tokens, 1.9M vocab, uncased, 300d vectors, 1.75 GB download)](https://nlp.stanford.edu/projects/glove/) - pretrained words embeddings used in *model_training_LDA_NMF* notebook. After you download the file, you will need to update the '''file_path''' inside *model_training_LDA_NMF* notebook.
 
 ## Authors
 
