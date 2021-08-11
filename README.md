@@ -6,8 +6,8 @@ For this project, we collected over **18,000 job postings** that are all data sc
 
 For **data modeling**, it can be divided in two parts:
 
-1. For job postings data with domains information (labeled dataset), we trained supervised machine learing model that is able to predict the domain of a given job desciption. 
-2. For the full job postings dataset, we clustered the job postings based on job descriptions using unsupervised learning models. By doing this, we hope to uncover the domain information from each cluster. The main assumption we have is that job postings in the same cluster will likely to be in the same domain.  
+1. For job postings data with domain information (labeled dataset), we trained a supervised machine learning model that is able to predict the domain of a given job description. 
+2. For the full job postings dataset, we clustered the job postings based on job descriptions using unsupervised learning models. By doing this, we hope to uncover the domain information from each cluster. The main assumption we have is that job postings in the same cluster will likely be in the same domain.  
 
 To present the result in a meaningful way, we built a **dashboard that allow students or job seekers to filter jobs by domain**. Our dashboard will also include additional filtering by job location and allow people to compare the required skillsets across domains. 
 
