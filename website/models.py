@@ -42,6 +42,9 @@ class Jd(models.Model):
     education = models.TextField(blank=True, null=True)
     skill = models.TextField(blank=True, null=True)
     cleaned_jd = models.TextField(blank=True, null=True)
+    domain_minik = models.CharField(max_length=50, blank=True, null=True)
+    domain_lr = models.CharField(max_length=50, blank=True, null=True)
+    clean_post_date = models.DateField(blank=True, null=True)
 
     class Meta:
         managed = False
