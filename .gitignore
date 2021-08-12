@@ -12,3 +12,4 @@ dashboard-data-checks.ipynb
 # Database
 *.sqlite3
 website/migrations/
+db_info.py
