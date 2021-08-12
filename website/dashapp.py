@@ -19,16 +19,25 @@ df_years = df[(df['year']==2019) | (df['year']==2021)]
 df_years = df_years.groupby(['domain_minik', 'year']).count().reset_index().rename(columns={'id':'count',
                                                                                             'domain_minik':'domain'})
 df_years['year'] = df_years['year'].astype(int).astype(str)
-domain_year_bar = px.bar(df_years, x='domain', y='count', color='year', barmode="group", height=350,
-                         title='Job Posts by Domain')
+domain_year_bar = px.bar(df_years,
+                         x='domain',
+                         y='count',
+                         color='year',
+                         barmode="group",
+                         height=300,
+                         title='Job Posts by Domain').update_layout(margin_t=30)
 
 # top 20 in demand skills
 df['skill'] = df['skill'].str.split(', ')
 skills_df = df.explode('skill')
 skill_count = skills_df[skills_df['skill'].str.strip()!=''].groupby('skill')['id'].count().reset_index().rename(columns={'id':'count'})
 skill_count = skill_count.sort_values(by='count', ascending=False).iloc[0:20].reset_index().drop(columns='index')
-top_skills_bar = px.bar(skill_count.sort_values(by='count'), x="count", y="skill", title="Top 20 Most Requested Skills",
-                        orientation='h', height=500)
+top_skills_bar = px.bar(skill_count.sort_values(by='count'),
+                        x="count",
+                        y="skill",
+                        title='Top 20 Most Requested Skills',
+                        orientation='h',
+                        height=500).update_layout(margin_t=30)
 
 # postings by state
 # clean up the weird MI state:
@@ -41,7 +50,7 @@ map_fig = px.choropleth(state_count,
                     locationmode='USA-states',
                     color_continuous_scale=['#636EFA', '#EF553B'],
                     scope='usa',
-                    title='Job Postings by State')
+                    title='Job Posts by State').update_layout(margin_t=30)
 
 app.layout = html.Div(
     className='row',
@@ -49,27 +58,55 @@ app.layout = html.Div(
         html.Div(
             className='column',
             children=[
-                html.Label([
-                    'Filter Domain:',
-                    dcc.Dropdown(
-                        id='domain-selection',
-                        options=[{'label': i, 'value': i} for i in df.domain_minik.unique()],
-                        value=None)]),
-                dcc.Graph(
-                    id='skills-barchart',
-                    figure=top_skills_bar)
+                html.Div(
+                    className='row',
+                    children=[
+                        html.Label([
+                            'Filter Domain:',
+                            dcc.Dropdown(
+                                id='domain-selection',
+                                options=[{'label': i, 'value': i} for i in df.domain_minik.unique()],
+                                value=None
+                            )
+                        ])
+                    ],
+                    style={'padding':'20px'}
+                ),
+                html.Div(
+                    className='row',
+                    children=[
+                        dcc.Graph(
+                            id='skills-barchart',
+                            figure=top_skills_bar
+                        )
+                    ],
+                    style={'padding':'20px'}
+                )
             ],
             style={'display':'inline-block', 'width':'48%'}
         ),
         html.Div(
             className='column',
             children=[
-                dcc.Graph(
-                    id='domain-year-barchart',
-                    figure=domain_year_bar),
-                dcc.Graph(
-                    id='map',
-                    figure=map_fig
+                html.Div(
+                    className='row',
+                    children=[
+                        dcc.Graph(
+                            id='domain-year-barchart',
+                            figure=domain_year_bar
+                        )
+                    ],
+                    style={'padding':'20px'}
+                ),
+                html.Div(
+                    className='row',
+                    children=[
+                        dcc.Graph(
+                            id='map',
+                            figure=map_fig
+                        )
+                    ],
+                    style={'padding':'20px'}
                 )
             ],
             style={'display':'inline-block', 'width':'48%'}
@@ -88,8 +125,12 @@ def update_skills_barchart(domain):
         filtered_skill_count = filtered_df[filtered_df['skill'].str.strip() != ''].groupby('skill')['id'].count().reset_index().rename(
             columns={'id': 'count'})
         filtered_skill_count = filtered_skill_count.sort_values(by='count', ascending=False).iloc[0:20].reset_index().drop(columns='index')
-        return px.bar(filtered_skill_count.sort_values(by='count'), x="count", y="skill", title="Top 20 Most Requested Skills",
-                      orientation='h', height=500)
+        return px.bar(filtered_skill_count.sort_values(by='count'),
+                      x="count",
+                      y="skill",
+                      title='Top 20 Most Requested Skills',
+                      orientation='h',
+                      height=500).update_layout(margin_t=30)
     else:
         return top_skills_bar
 
@@ -108,7 +149,7 @@ def update_skills_barchart(domain):
                                 locationmode='USA-states',
                                 color_continuous_scale=['#636EFA', '#EF553B'],
                                 scope='usa',
-                                title='Job Posts by State')
+                                title='Job Posts by State').update_layout(margin_t=30)
     else:
         return map_fig
 
