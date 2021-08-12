@@ -10,6 +10,7 @@ from django.db import models
 class Jd(models.Model):
     state = models.CharField(max_length=45, blank=True, null=True)
     skill = models.TextField(blank=True, null=True)
+    company_name = models.CharField(max_length=50, blank=True, null=True)
     domain_minik = models.CharField(max_length=50, blank=True, null=True)
     domain_lr = models.CharField(max_length=50, blank=True, null=True)
     clean_post_date = models.DateField(blank=True, null=True)
