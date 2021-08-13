@@ -18,9 +18,6 @@ df = pd.DataFrame(Jd.objects.all().values())
 # slit skills into list
 df['skill'] = df['skill'].str.split(', ')
 
-# separate year
-df['year'] = pd.DatetimeIndex(df['clean_post_date']).year
-
 # Generate domain list for dropdown menu --------------------------------------------------------------
 def domain_list(model='domain_lr'):
     return [{'label': i, 'value': i} for i in df[model].unique()]
@@ -29,16 +26,12 @@ def domain_list(model='domain_lr'):
 
 # jobs by domain 2019 vs. 2021
 def jobs_by_domain_barchart(model='domain_lr'):
-    df_years = df[(df['year']==2019) | (df['year']==2021)]
-    df_years = df_years.groupby([model, 'year']).count().reset_index().rename(columns={'id':'count', model:'domain'})
-    df_years['year'] = df_years['year'].astype(int).astype(str)
-    return px.bar(df_years,
+    df_domains = df.groupby([model]).count().reset_index().rename(columns={'id':'count', model:'domain'}).sort_values(by='count', ascending=False)
+    return px.bar(df_domains,
         x='domain',
         y='count',
-        color='year',
-        barmode="group",
         height=300,
-        title='Job Posts by Domain').update_layout(margin_t=30)
+        title='Job Posts by Domain').update_layout(margin_t=30).update_traces(marker_color='#636EFA')
 
 # top 20 in demand skills
 def skills_barchart(domain=None, model='domain_lr'):
@@ -57,7 +50,7 @@ def skills_barchart(domain=None, model='domain_lr'):
                   y="skill",
                   title='Top 20 Most Requested Skills',
                   orientation='h',
-                  height=500).update_layout(margin_t=30, margin_b=0)
+                  height=500).update_layout(margin_t=30, margin_b=0).update_traces(marker_color='#00CC96')
 
 # job posts by state (map)
 def jobs_by_state_map(domain=None, model='domain_lr'):
@@ -71,7 +64,7 @@ def jobs_by_state_map(domain=None, model='domain_lr'):
                         locations='state',
                         color='count',
                         locationmode='USA-states',
-                        color_continuous_scale=['#636EFA', '#EF553B'],
+                        color_continuous_scale=['#636EFA', '#00CC96', '#FECB52', '#FFA15A', '#EF553B'],
                         scope='usa',
                         title='Job Posts by State',
                         height=300).update_layout(margin_t=30, margin_b=0, margin_r=0, margin_l=0)
@@ -143,10 +136,10 @@ app.layout = html.Div(className='row', children=[
                 id='model-selection',
                 options=[
                     {'label': 'Logistic Regression Model', 'value': 'domain_lr'},
-                    {'label': 'K-Means Model', 'value': 'domain_minik'}
+                    {'label': 'Mini-Batch K-Means Model', 'value': 'domain_minik'}
                 ],
                 value='domain_lr',
-                labelStyle={'display': 'inline-block'}
+                labelStyle={'display': 'inline-block', 'padding':'15px'}
             )
         ], style={'width':'48%', 'padding-top':'30px'})
     ], style={'padding':'20px'}),
@@ -160,7 +153,8 @@ app.layout = html.Div(className='row', children=[
         html.Div(className='column', children=[
             dcc.Graph(
                 id='map',
-                figure=jobs_by_state_map()
+                figure=jobs_by_state_map(),
+                config={'scrollZoom':False}
             )
         ], style={'width':'48%'})
     ], style={'padding':'20px'}),
