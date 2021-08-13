@@ -1,4 +1,4 @@
-# Job Postings Analysis
+# Data Science Job Market Analysis 
 
 This is our capstone project from the Master program in Applied Data Science at University of Michigan. With graduation approaching, we are interested in learning more about **the current job market for data science in different domains**. 
 
