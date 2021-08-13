@@ -99,14 +99,8 @@ def top_company_skills_radar(domain=None, model='domain_lr'):
                                       'skill']).count().reset_index().rename(columns={'id':'count'})
     # radar plot
     radar_plot = go.Figure().update_layout(
-        legend=dict(
-            orientation='h',
-            yanchor='top',
-            y=-0.05,
-            xanchor='left',
-            x=0),
         height=500,
-        margin=dict(t=50, r=0, b=0, l=0),
+        margin=dict(t=50, r=0, b=10, l=0),
         title='Top 10 Skills Requested by the Top 5 Companies'
     )
     for c in top_company_list:
