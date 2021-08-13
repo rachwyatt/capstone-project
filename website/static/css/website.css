@@ -22,7 +22,6 @@ h4 {
 }
 
 .navbar {
-    background-color: #475B5A;
     padding-left: 60px;
 }
 
@@ -34,11 +33,6 @@ h4 {
 
 .navbar a {
     margin-right: 25px;
-}
-
-.iframe {
-    margin-top: 0px;
-    padding-top: 0px;
 }
 
 .site-content {
