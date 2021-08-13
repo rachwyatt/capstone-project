@@ -18,26 +18,32 @@ df = pd.DataFrame(Jd.objects.all().values())
 # slit skills into list
 df['skill'] = df['skill'].str.split(', ')
 
+# separate year
+df['year'] = pd.DatetimeIndex(df['clean_post_date']).year
+
+# Generate domain list for dropdown menu --------------------------------------------------------------
+def domain_list(model='domain_lr'):
+    return [{'label': i, 'value': i} for i in df[model].unique()]
+
 # Visualization Creation Functions ---------------------------------------------------------------------
 
 # jobs by domain 2019 vs. 2021
-df['year'] = pd.DatetimeIndex(df['clean_post_date']).year
-df_years = df[(df['year']==2019) | (df['year']==2021)]
-df_years = df_years.groupby(['domain_minik', 'year']).count().reset_index().rename(columns={'id':'count',
-                                                                                            'domain_minik':'domain'})
-df_years['year'] = df_years['year'].astype(int).astype(str)
-domain_year_bar = px.bar(df_years,
-                         x='domain',
-                         y='count',
-                         color='year',
-                         barmode="group",
-                         height=300,
-                         title='Job Posts by Domain').update_layout(margin_t=30)
+def jobs_by_domain_barchart(model='domain_lr'):
+    df_years = df[(df['year']==2019) | (df['year']==2021)]
+    df_years = df_years.groupby([model, 'year']).count().reset_index().rename(columns={'id':'count', model:'domain'})
+    df_years['year'] = df_years['year'].astype(int).astype(str)
+    return px.bar(df_years,
+        x='domain',
+        y='count',
+        color='year',
+        barmode="group",
+        height=300,
+        title='Job Posts by Domain').update_layout(margin_t=30)
 
 # top 20 in demand skills
-def skills_barchart(domain=None):
+def skills_barchart(domain=None, model='domain_lr'):
     if domain is not None:
-        skills_df = df[df['domain_minik'] == domain]
+        skills_df = df[df[model] == domain]
     else:
         skills_df = df
     skills_df = skills_df.explode('skill')
@@ -54,10 +60,10 @@ def skills_barchart(domain=None):
                   height=500).update_layout(margin_t=30, margin_b=0)
 
 # job posts by state (map)
-def jobs_by_state_map(domain=None):
+def jobs_by_state_map(domain=None, model='domain_lr'):
     df['state'] = df['state'].str.replace('US-', '')
     if domain is not None:
-        state_count = df[df['domain_minik']==domain]
+        state_count = df[df[model]==domain]
     else:
         state_count = df
     state_count = state_count.groupby('state').count().reset_index().rename(columns={'id':'count'})
@@ -68,12 +74,12 @@ def jobs_by_state_map(domain=None):
                         color_continuous_scale=['#636EFA', '#EF553B'],
                         scope='usa',
                         title='Job Posts by State',
-                        width=600).update_layout(margin_t=30, margin_b=0, margin_r=0, margin_l=0)
+                        height=300).update_layout(margin_t=30, margin_b=0, margin_r=0, margin_l=0)
 
 # radar chart skills by top companies
-def top_company_skills_radar(domain=None):
+def top_company_skills_radar(domain=None, model='domain_lr'):
     if domain is not None:
-        top_df = df[df['domain_minik']==domain]
+        top_df = df[df[model]==domain]
     else:
         top_df = df
 
@@ -83,8 +89,7 @@ def top_company_skills_radar(domain=None):
                                       top_df['company_name'])
     top_df['company_name'] = np.where(top_df['company_name'].str.contains('booz allen', case=False), 'Booz Allen Hamilton',
                                       top_df['company_name'])
-    top_company_list = list(top_df[top_df['company_name'].notna() & (~top_df['company_name'].isin(['CyberCoders',
-                         'Jefferson Frank']))].groupby('company_name').count().reset_index()\
+    top_company_list = list(top_df[top_df['company_name'].notna()].groupby('company_name').count().reset_index()\
                          .rename(columns={'id':'count'}).sort_values(by='count', ascending=False).reset_index()\
                          .loc[0:4, 'company_name'])
 
@@ -124,64 +129,93 @@ def top_company_skills_radar(domain=None):
 app.layout = html.Div(className='row', children=[
     html.Div(className='row', children=[
         html.Div(className='column', children=[
-            html.Div(className='row', children=[
-                html.Label([
-                    'Filter Domain:',
-                    dcc.Dropdown(
-                        id='domain-selection',
-                        options=[{'label': i, 'value': i} for i in df.domain_minik.unique()],
-                        value=None
-                    )
-                ])
-            ], style={'padding':'20px'}),
-            html.Div(className='row', children=[
-                dcc.Graph(
-                    id='domain-year-barchart',
-                    figure=domain_year_bar
+            html.Label([
+                'Filter Domain:',
+                dcc.Dropdown(
+                    id='domain-selection',
+                    options=domain_list(),
+                    value=None
                 )
-            ], style={'padding':'20px'})
+            ])
+        ], style={'width':'48%'}),
+        html.Div(className='column', children=[
+            dcc.RadioItems(
+                id='model-selection',
+                options=[
+                    {'label': 'Logistic Regression Model', 'value': 'domain_lr'},
+                    {'label': 'K-Means Model', 'value': 'domain_minik'}
+                ],
+                value='domain_lr',
+                labelStyle={'display': 'inline-block'}
+            )
+        ], style={'width':'48%', 'padding-top':'30px'})
+    ], style={'padding':'20px'}),
+    html.Div(className='row', children=[
+        html.Div(className='column', children=[
+            dcc.Graph(
+                id='domain-year-barchart',
+                figure=jobs_by_domain_barchart()
+            )
         ], style={'width':'48%'}),
         html.Div(className='column', children=[
             dcc.Graph(
                 id='map',
                 figure=jobs_by_state_map()
             )
-        ], style={'padding':'20px', 'width':'48%'})
-    ]),
+        ], style={'width':'48%'})
+    ], style={'padding':'20px'}),
     html.Div(className='row', children=[
         html.Div(className='column', children=[
             dcc.Graph(
                 id='skills-barchart',
                 figure=skills_barchart()
             )
-        ], style={'padding':'20px', 'width':'48%'}),
+        ], style={'width':'48%'}),
         html.Div(className='column', children=[
             dcc.Graph(
                 id='skills-radar-plot',
                 figure=top_company_skills_radar()
             )
-        ], style={'padding':'20px', 'width':'48%'})
-    ])
+        ], style={'width':'48%'})
+    ], style={'padding':'20px'})
 ])
 
-# Updates to visualizations when filtering by domains ------------------------------------------------------
+# Updates to dropdown menu and visualizations when filtering by domains ------------------------------------------
+@app.callback(
+    [dash.dependencies.Output('domain-selection', 'options'),
+    dash.dependencies.Output('domain-selection', 'value')],
+    [dash.dependencies.Input('model-selection', 'value')]
+)
+def update_domain_list(model):
+    return domain_list(model), None
+
+@app.callback(
+    dash.dependencies.Output('domain-year-barchart', 'figure'),
+    [dash.dependencies.Input('model-selection', 'value')]
+)
+def update_jobs_by_domain_barchart(model):
+    return jobs_by_domain_barchart(model)
+
 @app.callback(
     dash.dependencies.Output('skills-barchart', 'figure'),
-    [dash.dependencies.Input('domain-selection', 'value')]
+    [dash.dependencies.Input('domain-selection', 'value'),
+     dash.dependencies.Input('model-selection', 'value')]
 )
-def update_skills_barchart(domain):
-    return skills_barchart(domain)
+def update_skills_barchart(domain, model):
+    return skills_barchart(domain, model)
 
 @app.callback(
     dash.dependencies.Output('map', 'figure'),
-    [dash.dependencies.Input('domain-selection', 'value')]
+    [dash.dependencies.Input('domain-selection', 'value'),
+     dash.dependencies.Input('model-selection', 'value')]
 )
-def update_map(domain):
-    return jobs_by_state_map(domain)
+def update_map(domain, model):
+    return jobs_by_state_map(domain, model)
 
 @app.callback(
     dash.dependencies.Output('skills-radar-plot', 'figure'),
-    [dash.dependencies.Input('domain-selection', 'value')]
+    [dash.dependencies.Input('domain-selection', 'value'),
+     dash.dependencies.Input('model-selection', 'value')]
 )
-def update_radar_plot(domain):
-    return top_company_skills_radar(domain)
+def update_radar_plot(domain, model):
+    return top_company_skills_radar(domain, model)
