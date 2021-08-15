@@ -6,9 +6,10 @@ import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
 from django_plotly_dash import DjangoDash
+import dash_bootstrap_components as dbc
 from .models import Jd
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+external_stylesheets = [dbc.themes.BOOTSTRAP]
 
 app = DjangoDash('JobDashboard', external_stylesheets=external_stylesheets)
 
@@ -32,7 +33,7 @@ def domain_list(model='domain_lr'):
 
 # Visualization Creation Functions ---------------------------------------------------------------------
 
-# jobs by domain 2019 vs. 2021
+# jobs by domain
 def jobs_by_domain_barchart(model='domain_lr', state=None):
     if state is not None:
         df_domains = df[df['state'] == state]
@@ -129,20 +130,20 @@ def top_company_skills_radar(domain=None, model='domain_lr', state=None):
     return radar_plot
 
 # Dashboard Layout -------------------------------------------------------------------------------------------
-app.layout = html.Div(className='row', children=[
-    html.Div(className='row', children=[
-        html.Div(className='column', children=[
-            html.Div(className='row', children=[
-                html.Label([
+app.layout = html.Div([
+    dbc.Row([
+        dbc.Col([
+            dbc.Row([
+                dbc.Label([
                     'Filter Domain:',
                     dcc.Dropdown(
                         id='domain-selection',
                         options=domain_list(),
                         value=None
                     )
-                ])
-            ]),
-            html.Div(className='row', children=[
+                ], style={'width':'100%'})
+            ], style={'padding-left':'20px', 'padding-right':'20px'}),
+            dbc.Row([
                 dcc.RadioItems(
                     id='model-selection',
                     options=[
@@ -150,51 +151,68 @@ app.layout = html.Div(className='row', children=[
                         {'label': 'Mini-Batch K-Means Model', 'value': 'domain_minik'}
                     ],
                     value='domain_lr',
-                    labelStyle={'display': 'inline-block', 'padding':'15px'}
+                    labelStyle={'display': 'inline-block', 'padding':'20px'}
                 )
             ])
-        ], style={'width':'48%'}),
-        html.Div(className='column', children=[
-            html.Label([
+        ]),
+        dbc.Col([
+            dbc.Label([
                 'Filter State:',
                 dcc.Dropdown(
                     id='state-selection',
                     options=[{'label': i, 'value': i} for i in state_list],
                     value=None
                 )
-            ])
-        ], style={'width':'48%'})
-    ], style={'padding':'20px'}),
-    html.Div(className='row', children=[
-        html.Div(className='column', children=[
-            dcc.Graph(
-                id='domain-year-barchart',
-                figure=jobs_by_domain_barchart()
+            ], style={'width':'100%'})
+        ], style={'padding-left':'20px', 'padding-right':'20px'})
+    ]),
+    dbc.Row([
+        dbc.Col([
+            dbc.Card(
+                dbc.CardBody(
+                    dcc.Graph(
+                        id='domain-year-barchart',
+                        figure=jobs_by_domain_barchart()
+                    )
+                ), style={'margin-bottom':'20px'}
             )
-        ], style={'width':'48%'}),
-        html.Div(className='column', children=[
-            dcc.Graph(
-                id='map',
-                figure=jobs_by_state_map(),
-                config={'scrollZoom':False}
+        ]),
+        dbc.Col([
+            dbc.Card(
+                dbc.CardBody(
+                    dcc.Graph(
+                        id='map',
+                        figure=jobs_by_state_map(),
+                        config={'scrollZoom':False}
+                    )
+                ), style={'margin-bottom':'20px'}
             )
-        ], style={'width':'48%'})
-    ], style={'padding':'20px'}),
-    html.Div(className='row', children=[
-        html.Div(className='column', children=[
-            dcc.Graph(
-                id='skills-barchart',
-                figure=skills_barchart()
+        ])
+    ]),
+    dbc.Row([
+        dbc.Col([
+            dbc.Card(
+                dbc.CardBody(
+                    dcc.Graph(
+                        id='skills-barchart',
+                        figure=skills_barchart()
+                    )
+                ), style={'margin-bottom':'20px'}
             )
-        ], style={'width':'48%'}),
-        html.Div(className='column', children=[
-            dcc.Graph(
-                id='skills-radar-plot',
-                figure=top_company_skills_radar()
+        ]),
+        dbc.Col([
+            dbc.Card(
+                dbc.CardBody(
+                    dcc.Graph(
+                        id='skills-radar-plot',
+                        figure=top_company_skills_radar()
+                    )
+                ), style={'margin-bottom':'20px'}
             )
-        ], style={'width':'48%'})
-    ], style={'padding':'20px'})
-])
+        ])
+    ])
+], style={'padding-left':'40px', 'padding-right':'40px', 'padding-top':'20px', 'padding-bottom':'20px',
+          'background': '#f2f2f2'})
 
 # Updates to dropdown menu and visualizations when filtering by domains ------------------------------------------
 @app.callback(
