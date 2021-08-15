@@ -44,8 +44,7 @@ def jobs_by_domain_barchart(model='domain_lr', state=None):
     return px.bar(df_domains,
         x='domain',
         y='count',
-        height=300,
-        title='Job Posts by Domain').update_layout(margin_t=30).update_traces(marker_color='#636EFA')
+        height=300).update_layout(margin_t=30).update_traces(marker_color='#636EFA')
 
 # top 20 in demand skills
 def skills_barchart(domain=None, model='domain_lr', state=None):
@@ -64,7 +63,6 @@ def skills_barchart(domain=None, model='domain_lr', state=None):
     return px.bar(skills_df_count.sort_values(by='count'),
                   x="count",
                   y="skill",
-                  title='Top 20 Most Requested Skills',
                   orientation='h',
                   height=500).update_layout(margin_t=30, margin_b=0).update_traces(marker_color='#00CC96')
 
@@ -81,7 +79,6 @@ def jobs_by_state_map(domain=None, model='domain_lr'):
                         locationmode='USA-states',
                         color_continuous_scale=['#636EFA', '#00CC96', '#FECB52', '#FFA15A', '#EF553B'],
                         scope='usa',
-                        title='Job Posts by State',
                         height=300).update_layout(margin_t=30, margin_b=0, margin_r=0, margin_l=0)
 
 # radar chart skills by top companies
@@ -116,9 +113,14 @@ def top_company_skills_radar(domain=None, model='domain_lr', state=None):
                                       'skill']).count().reset_index().rename(columns={'id':'count'})
     # radar plot
     radar_plot = go.Figure().update_layout(
-        height=500,
-        margin=dict(t=50, r=0, b=10, l=0),
-        title='Top 10 Skills Requested by the Top 5 Companies'
+        margin=dict(t=10, r=0, b=10, l=0),
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="left",
+            x=0.01
+        )
     )
     for c in top_company_list:
         curr_company_df = top_company_df[top_company_df['company_name']==c]
@@ -170,45 +172,50 @@ app.layout = html.Div([
         dbc.Row([
             dbc.Col([
                 dbc.Card(
-                    dbc.CardBody(
+                    dbc.CardBody([
+                        html.H4("Job Posts by Domain", className="card-title"),
                         dcc.Graph(
-                            id='domain-year-barchart',
+                            id='domain-barchart',
                             figure=jobs_by_domain_barchart()
                         )
-                    ), style={'margin-bottom':'20px'}
+                    ]), style={'margin-bottom':'20px'}
                 )
             ]),
             dbc.Col([
                 dbc.Card(
-                    dbc.CardBody(
+                    dbc.CardBody([
+                        html.H4("Job Posts by State", className="card-title"),
                         dcc.Graph(
                             id='map',
                             figure=jobs_by_state_map(),
                             config={'scrollZoom':False}
                         )
-                    ), style={'margin-bottom':'20px'}
+                    ]), style={'margin-bottom':'20px'}
                 )
             ])
         ]),
         dbc.Row([
             dbc.Col([
                 dbc.Card(
-                    dbc.CardBody(
+                    dbc.CardBody([
+                        html.H4("Top 20 Most Requested Skills", className="card-title"),
                         dcc.Graph(
                             id='skills-barchart',
                             figure=skills_barchart()
                         )
-                    ), style={'margin-bottom':'20px'}
+                    ]), style={'margin-bottom':'20px'}
                 )
             ]),
             dbc.Col([
                 dbc.Card(
-                    dbc.CardBody(
+                    dbc.CardBody([
+                        html.H4("Top 10 Skills Requested by the Top 5 Companies", className="card-title",
+                                style={'margin-bottom':'20px'}),
                         dcc.Graph(
                             id='skills-radar-plot',
                             figure=top_company_skills_radar()
                         )
-                    ), style={'margin-bottom':'20px'}
+                    ]), style={'margin-bottom':'20px', 'padding-bottom':'20px'}
                 )
             ])
         ])
@@ -225,7 +232,7 @@ def update_domain_list(model):
     return domain_list(model), None
 
 @app.callback(
-    dash.dependencies.Output('domain-year-barchart', 'figure'),
+    dash.dependencies.Output('domain-barchart', 'figure'),
     [dash.dependencies.Input('model-selection', 'value'),
      dash.dependencies.Input('state-selection', 'value')]
 )
