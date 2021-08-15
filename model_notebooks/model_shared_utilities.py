@@ -6,6 +6,7 @@ import re
 
 import matplotlib.pyplot as plt                               
 import matplotlib.cm as cm
+import seaborn as sns
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
