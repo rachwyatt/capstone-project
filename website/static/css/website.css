@@ -35,12 +35,11 @@ h4 {
     margin-right: 25px;
 }
 
-.body-background {
-    background: #f2f2f2;
-}
-
 .content-page {
     background: #FFFFFF;
-    padding: 50px;
-    margin: 0px 100px 0px 100px;
+    padding-top: 20px;
+}
+
+.team-member {
+    padding: 20px;
 }
