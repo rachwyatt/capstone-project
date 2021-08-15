@@ -131,88 +131,89 @@ def top_company_skills_radar(domain=None, model='domain_lr', state=None):
 
 # Dashboard Layout -------------------------------------------------------------------------------------------
 app.layout = html.Div([
-    dbc.Row([
-        dbc.Col([
-            dbc.Row([
+    dbc.Container([
+        dbc.Row([
+            dbc.Col([
+                dbc.Row([
+                    dbc.Label([
+                        'Filter Domain:',
+                        dcc.Dropdown(
+                            id='domain-selection',
+                            options=domain_list(),
+                            value=None
+                        )
+                    ], style={'width':'100%'})
+                ], style={'padding-left':'20px', 'padding-right':'20px'}),
+                dbc.Row([
+                    dcc.RadioItems(
+                        id='model-selection',
+                        options=[
+                            {'label': 'Logistic Regression Model', 'value': 'domain_lr'},
+                            {'label': 'Mini-Batch K-Means Model', 'value': 'domain_minik'}
+                        ],
+                        value='domain_lr',
+                        labelStyle={'display': 'inline-block', 'padding':'20px'}
+                    )
+                ])
+            ]),
+            dbc.Col([
                 dbc.Label([
-                    'Filter Domain:',
+                    'Filter State:',
                     dcc.Dropdown(
-                        id='domain-selection',
-                        options=domain_list(),
+                        id='state-selection',
+                        options=[{'label': i, 'value': i} for i in state_list],
                         value=None
                     )
                 ], style={'width':'100%'})
-            ], style={'padding-left':'20px', 'padding-right':'20px'}),
-            dbc.Row([
-                dcc.RadioItems(
-                    id='model-selection',
-                    options=[
-                        {'label': 'Logistic Regression Model', 'value': 'domain_lr'},
-                        {'label': 'Mini-Batch K-Means Model', 'value': 'domain_minik'}
-                    ],
-                    value='domain_lr',
-                    labelStyle={'display': 'inline-block', 'padding':'20px'}
+            ], style={'padding-left':'20px', 'padding-right':'20px'})
+        ]),
+        dbc.Row([
+            dbc.Col([
+                dbc.Card(
+                    dbc.CardBody(
+                        dcc.Graph(
+                            id='domain-year-barchart',
+                            figure=jobs_by_domain_barchart()
+                        )
+                    ), style={'margin-bottom':'20px'}
+                )
+            ]),
+            dbc.Col([
+                dbc.Card(
+                    dbc.CardBody(
+                        dcc.Graph(
+                            id='map',
+                            figure=jobs_by_state_map(),
+                            config={'scrollZoom':False}
+                        )
+                    ), style={'margin-bottom':'20px'}
                 )
             ])
         ]),
-        dbc.Col([
-            dbc.Label([
-                'Filter State:',
-                dcc.Dropdown(
-                    id='state-selection',
-                    options=[{'label': i, 'value': i} for i in state_list],
-                    value=None
+        dbc.Row([
+            dbc.Col([
+                dbc.Card(
+                    dbc.CardBody(
+                        dcc.Graph(
+                            id='skills-barchart',
+                            figure=skills_barchart()
+                        )
+                    ), style={'margin-bottom':'20px'}
                 )
-            ], style={'width':'100%'})
-        ], style={'padding-left':'20px', 'padding-right':'20px'})
-    ]),
-    dbc.Row([
-        dbc.Col([
-            dbc.Card(
-                dbc.CardBody(
-                    dcc.Graph(
-                        id='domain-year-barchart',
-                        figure=jobs_by_domain_barchart()
-                    )
-                ), style={'margin-bottom':'20px'}
-            )
-        ]),
-        dbc.Col([
-            dbc.Card(
-                dbc.CardBody(
-                    dcc.Graph(
-                        id='map',
-                        figure=jobs_by_state_map(),
-                        config={'scrollZoom':False}
-                    )
-                ), style={'margin-bottom':'20px'}
-            )
-        ])
-    ]),
-    dbc.Row([
-        dbc.Col([
-            dbc.Card(
-                dbc.CardBody(
-                    dcc.Graph(
-                        id='skills-barchart',
-                        figure=skills_barchart()
-                    )
-                ), style={'margin-bottom':'20px'}
-            )
-        ]),
-        dbc.Col([
-            dbc.Card(
-                dbc.CardBody(
-                    dcc.Graph(
-                        id='skills-radar-plot',
-                        figure=top_company_skills_radar()
-                    )
-                ), style={'margin-bottom':'20px'}
-            )
+            ]),
+            dbc.Col([
+                dbc.Card(
+                    dbc.CardBody(
+                        dcc.Graph(
+                            id='skills-radar-plot',
+                            figure=top_company_skills_radar()
+                        )
+                    ), style={'margin-bottom':'20px'}
+                )
+            ])
         ])
     ])
-], style={'padding-left':'40px', 'padding-right':'40px', 'padding-top':'20px', 'padding-bottom':'20px',
-          'background': '#f2f2f2'})
+], style={'background': '#f2f2f2', 'padding-top':'20px'})
 
 # Updates to dropdown menu and visualizations when filtering by domains ------------------------------------------
 @app.callback(
