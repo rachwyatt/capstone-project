@@ -6,9 +6,10 @@ import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
 from django_plotly_dash import DjangoDash
+import dash_bootstrap_components as dbc
 from .models import Jd
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+external_stylesheets = [dbc.themes.BOOTSTRAP]
 
 app = DjangoDash('JobDashboard', external_stylesheets=external_stylesheets)
 
@@ -18,15 +19,28 @@ df = pd.DataFrame(Jd.objects.all().values())
 # slit skills into list
 df['skill'] = df['skill'].str.split(', ')
 
+# clean up states a little
+df['state'] = df['state'].str.replace('US-', '')
+df['state'] = df['state'].astype(str)
+
+# get list of states for state filter
+state_list = sorted([i for i in df['state'].unique() if (len(i) < 3) & (i not in ['', 'NN', 'UK', 'QC', 'NS',
+                                                                                  'ON', 'BC', 'W', 'VI', 'PR'])])
+
 # Generate domain list for dropdown menu --------------------------------------------------------------
 def domain_list(model='domain_lr'):
     return [{'label': i, 'value': i} for i in df[model].unique()]
 
 # Visualization Creation Functions ---------------------------------------------------------------------
 
-# jobs by domain 2019 vs. 2021
-def jobs_by_domain_barchart(model='domain_lr'):
-    df_domains = df.groupby([model]).count().reset_index().rename(columns={'id':'count', model:'domain'}).sort_values(by='count', ascending=False)
+# jobs by domain
+def jobs_by_domain_barchart(model='domain_lr', state=None):
+    if state is not None:
+        df_domains = df[df['state'] == state]
+    else:
+        df_domains = df
+    df_domains = df_domains.groupby([model]).count().reset_index().rename(columns={'id':'count', model:'domain'}).\
+        sort_values(by='count', ascending=False)
     return px.bar(df_domains,
         x='domain',
         y='count',
@@ -34,11 +48,13 @@ def jobs_by_domain_barchart(model='domain_lr'):
         title='Job Posts by Domain').update_layout(margin_t=30).update_traces(marker_color='#636EFA')
 
 # top 20 in demand skills
-def skills_barchart(domain=None, model='domain_lr'):
+def skills_barchart(domain=None, model='domain_lr', state=None):
     if domain is not None:
         skills_df = df[df[model] == domain]
     else:
         skills_df = df
+    if state is not None:
+        skills_df = skills_df[skills_df['state'] == state]
     skills_df = skills_df.explode('skill')
     skills_df_count = skills_df[skills_df['skill'].str.strip() != ''].groupby('skill')[
         'id'].count().reset_index().rename(
@@ -54,7 +70,6 @@ def skills_barchart(domain=None, model='domain_lr'):
 
 # job posts by state (map)
 def jobs_by_state_map(domain=None, model='domain_lr'):
-    df['state'] = df['state'].str.replace('US-', '')
     if domain is not None:
         state_count = df[df[model]==domain]
     else:
@@ -70,20 +85,22 @@ def jobs_by_state_map(domain=None, model='domain_lr'):
                         height=300).update_layout(margin_t=30, margin_b=0, margin_r=0, margin_l=0)
 
 # radar chart skills by top companies
-def top_company_skills_radar(domain=None, model='domain_lr'):
+def top_company_skills_radar(domain=None, model='domain_lr', state=None):
     if domain is not None:
         top_df = df[df[model]==domain]
     else:
         top_df = df
+    if state is not None:
+        top_df = top_df[top_df['state'] == state]
 
-    # get top companies - excluding cybercoders, jefferson frank
+    # get top companies
     top_df['company_name'] = top_df['company_name'].replace('', None).str.strip()
     top_df['company_name'] = np.where(top_df['company_name'].str.contains('amazon', case=False), 'Amazon',
                                       top_df['company_name'])
     top_df['company_name'] = np.where(top_df['company_name'].str.contains('booz allen', case=False), 'Booz Allen Hamilton',
                                       top_df['company_name'])
-    top_company_list = list(top_df[top_df['company_name'].notna()].groupby('company_name').count().reset_index()\
-                         .rename(columns={'id':'count'}).sort_values(by='count', ascending=False).reset_index()\
+    top_company_list = list(top_df[top_df['company_name'].notna()].groupby('company_name').count().reset_index()
+                         .rename(columns={'id':'count'}).sort_values(by='count', ascending=False).reset_index()
                          .loc[0:4, 'company_name'])
 
     # get top skills within those companies
@@ -91,8 +108,8 @@ def top_company_skills_radar(domain=None, model='domain_lr'):
     top_company_df['skill'] = np.where(top_company_df['skill'].str.contains('amazon web service', case=False),
                               'amazon web service', top_company_df['skill'])
     top_company_df = top_company_df[top_company_df['skill']!='']
-    top_skill_list = list(top_company_df.groupby('skill').count().reset_index().sort_values(by='id', ascending=False)\
-                            .reset_index().loc[0:9, 'skill'])
+    top_skill_list = list(top_company_df.groupby('skill').count().reset_index().sort_values(by='id', ascending=False)
+                          .reset_index().loc[0:9, 'skill'])
 
     # filter to those skills
     top_company_df = top_company_df[top_company_df['skill'].isin(top_skill_list)].groupby(['company_name',
@@ -113,60 +130,89 @@ def top_company_skills_radar(domain=None, model='domain_lr'):
     return radar_plot
 
 # Dashboard Layout -------------------------------------------------------------------------------------------
-app.layout = html.Div(className='row', children=[
-    html.Div(className='row', children=[
-        html.Div(className='column', children=[
-            html.Label([
-                'Filter Domain:',
-                dcc.Dropdown(
-                    id='domain-selection',
-                    options=domain_list(),
-                    value=None
+app.layout = html.Div([
+    dbc.Row([
+        dbc.Col([
+            dbc.Row([
+                dbc.Label([
+                    'Filter Domain:',
+                    dcc.Dropdown(
+                        id='domain-selection',
+                        options=domain_list(),
+                        value=None
+                    )
+                ], style={'width':'100%'})
+            ], style={'padding-left':'20px', 'padding-right':'20px'}),
+            dbc.Row([
+                dcc.RadioItems(
+                    id='model-selection',
+                    options=[
+                        {'label': 'Logistic Regression Model', 'value': 'domain_lr'},
+                        {'label': 'Mini-Batch K-Means Model', 'value': 'domain_minik'}
+                    ],
+                    value='domain_lr',
+                    labelStyle={'display': 'inline-block', 'padding':'20px'}
                 )
             ])
-        ], style={'width':'48%'}),
-        html.Div(className='column', children=[
-            dcc.RadioItems(
-                id='model-selection',
-                options=[
-                    {'label': 'Logistic Regression Model', 'value': 'domain_lr'},
-                    {'label': 'Mini-Batch K-Means Model', 'value': 'domain_minik'}
-                ],
-                value='domain_lr',
-                labelStyle={'display': 'inline-block', 'padding':'15px'}
+        ]),
+        dbc.Col([
+            dbc.Label([
+                'Filter State:',
+                dcc.Dropdown(
+                    id='state-selection',
+                    options=[{'label': i, 'value': i} for i in state_list],
+                    value=None
+                )
+            ], style={'width':'100%'})
+        ], style={'padding-left':'20px', 'padding-right':'20px'})
+    ]),
+    dbc.Row([
+        dbc.Col([
+            dbc.Card(
+                dbc.CardBody(
+                    dcc.Graph(
+                        id='domain-year-barchart',
+                        figure=jobs_by_domain_barchart()
+                    )
+                ), style={'margin-bottom':'20px'}
             )
-        ], style={'width':'48%', 'padding-top':'30px'})
-    ], style={'padding':'20px'}),
-    html.Div(className='row', children=[
-        html.Div(className='column', children=[
-            dcc.Graph(
-                id='domain-year-barchart',
-                figure=jobs_by_domain_barchart()
+        ]),
+        dbc.Col([
+            dbc.Card(
+                dbc.CardBody(
+                    dcc.Graph(
+                        id='map',
+                        figure=jobs_by_state_map(),
+                        config={'scrollZoom':False}
+                    )
+                ), style={'margin-bottom':'20px'}
             )
-        ], style={'width':'48%'}),
-        html.Div(className='column', children=[
-            dcc.Graph(
-                id='map',
-                figure=jobs_by_state_map(),
-                config={'scrollZoom':False}
+        ])
+    ]),
+    dbc.Row([
+        dbc.Col([
+            dbc.Card(
+                dbc.CardBody(
+                    dcc.Graph(
+                        id='skills-barchart',
+                        figure=skills_barchart()
+                    )
+                ), style={'margin-bottom':'20px'}
             )
-        ], style={'width':'48%'})
-    ], style={'padding':'20px'}),
-    html.Div(className='row', children=[
-        html.Div(className='column', children=[
-            dcc.Graph(
-                id='skills-barchart',
-                figure=skills_barchart()
+        ]),
+        dbc.Col([
+            dbc.Card(
+                dbc.CardBody(
+                    dcc.Graph(
+                        id='skills-radar-plot',
+                        figure=top_company_skills_radar()
+                    )
+                ), style={'margin-bottom':'20px'}
             )
-        ], style={'width':'48%'}),
-        html.Div(className='column', children=[
-            dcc.Graph(
-                id='skills-radar-plot',
-                figure=top_company_skills_radar()
-            )
-        ], style={'width':'48%'})
-    ], style={'padding':'20px'})
-])
+        ])
+    ])
+], style={'padding-left':'40px', 'padding-right':'40px', 'padding-top':'20px', 'padding-bottom':'20px',
+          'background': '#f2f2f2'})
 
 # Updates to dropdown menu and visualizations when filtering by domains ------------------------------------------
 @app.callback(
@@ -179,18 +225,20 @@ def update_domain_list(model):
 
 @app.callback(
     dash.dependencies.Output('domain-year-barchart', 'figure'),
-    [dash.dependencies.Input('model-selection', 'value')]
+    [dash.dependencies.Input('model-selection', 'value'),
+     dash.dependencies.Input('state-selection', 'value')]
 )
-def update_jobs_by_domain_barchart(model):
-    return jobs_by_domain_barchart(model)
+def update_jobs_by_domain_barchart(model, state):
+    return jobs_by_domain_barchart(model, state)
 
 @app.callback(
     dash.dependencies.Output('skills-barchart', 'figure'),
     [dash.dependencies.Input('domain-selection', 'value'),
-     dash.dependencies.Input('model-selection', 'value')]
+     dash.dependencies.Input('model-selection', 'value'),
+     dash.dependencies.Input('state-selection', 'value')]
 )
-def update_skills_barchart(domain, model):
-    return skills_barchart(domain, model)
+def update_skills_barchart(domain, model, state):
+    return skills_barchart(domain, model, state)
 
 @app.callback(
     dash.dependencies.Output('map', 'figure'),
@@ -203,7 +251,8 @@ def update_map(domain, model):
 @app.callback(
     dash.dependencies.Output('skills-radar-plot', 'figure'),
     [dash.dependencies.Input('domain-selection', 'value'),
-     dash.dependencies.Input('model-selection', 'value')]
+     dash.dependencies.Input('model-selection', 'value'),
+     dash.dependencies.Input('state-selection', 'value')]
 )
-def update_radar_plot(domain, model):
-    return top_company_skills_radar(domain, model)
+def update_radar_plot(domain, model, state):
+    return top_company_skills_radar(domain, model, state)
