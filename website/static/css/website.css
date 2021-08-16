@@ -40,6 +40,10 @@ h4 {
     padding-top: 20px;
 }
 
+.dashboard-page {
+    background: #F2F2F2;
+}
+
 .team-member {
     padding: 20px;
 }
