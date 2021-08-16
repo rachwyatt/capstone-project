@@ -135,6 +135,8 @@ def top_company_skills_radar(domain=None, model='domain_lr', state=None):
 # Dashboard Layout -------------------------------------------------------------------------------------------
 app.layout = html.Div([
     dbc.Container([
+        dbc.Alert('This dashboard does not reflect current job postings. The job posts in this data set were posted 2019-2021.',
+               style={'text-align':'center'}, color='warning', dismissable=True),
         dbc.Row([
             dbc.Col([
                 dbc.Row([
@@ -145,8 +147,12 @@ app.layout = html.Div([
                             options=domain_list(),
                             value=None
                         )
-                    ], style={'width':'100%'})
-                ], style={'padding-left':'20px', 'padding-right':'20px'}),
+                    ], style={'width':'100%'}, id='domain-tooltip'),
+                    dbc.Tooltip(
+                        'Filters all charts except "Job Posts by Domain"',
+                        target='domain-tooltip'
+                    )
+                ], style={'padding-left':'20px', 'padding-right':'20px', 'margin-bottom':'0px'}),
                 dbc.Row([
                     dcc.RadioItems(
                         id='model-selection',
@@ -156,8 +162,12 @@ app.layout = html.Div([
                         ],
                         value='domain_lr',
                         labelStyle={'display': 'inline-block', 'padding':'20px'}
+                    ),
+                    dbc.Tooltip(
+                        'Selects the model used to cluster job posts into their domains',
+                        target='model-selection'
                     )
-                ])
+                ], style={'padding-left':'20px', 'padding-right':'20px'})
             ]),
             dbc.Col([
                 dbc.Label([
@@ -167,7 +177,11 @@ app.layout = html.Div([
                         options=[{'label': i, 'value': i} for i in state_list],
                         value=None
                     )
-                ], style={'width':'100%'})
+                ], style={'width':'100%'}, id='state-tooltip'),
+                dbc.Tooltip(
+                    'Filters all charts except "Job Posts by State"',
+                    target='state-tooltip'
+                )
             ], style={'padding-left':'20px', 'padding-right':'20px'})
         ]),
         dbc.Row([
@@ -221,7 +235,7 @@ app.layout = html.Div([
             ])
         ])
     ])
-], style={'background': '#f2f2f2', 'padding-top':'20px', 'padding-bottom':'700px'})
+], style={'background': '#f2f2f2', 'padding-top':'10px', 'padding-bottom':'700px'})
 
 # Updates to dropdown menu and visualizations when filtering by domains ------------------------------------------
 @app.callback(
