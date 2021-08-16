@@ -29,7 +29,7 @@ state_list = sorted([i for i in df['state'].unique() if (len(i) < 3) & (i not in
 
 # Generate domain list for dropdown menu --------------------------------------------------------------
 def domain_list(model='domain_lr'):
-    return [{'label': i, 'value': i} for i in df[model].unique()]
+    return [{'label': i, 'value': i} for i in sorted(df[model].unique())]
 
 # Visualization Creation Functions ---------------------------------------------------------------------
 
@@ -113,14 +113,15 @@ def top_company_skills_radar(domain=None, model='domain_lr', state=None):
                                       'skill']).count().reset_index().rename(columns={'id':'count'})
     # radar plot
     radar_plot = go.Figure().update_layout(
-        margin=dict(t=10, r=0, b=10, l=0),
+        margin=dict(t=20, r=20, b=50, l=20),
         legend=dict(
             orientation="h",
             yanchor="bottom",
-            y=1.02,
+            y=1.1,
             xanchor="left",
             x=0.01
-        )
+        ),
+        height=450
     )
     for c in top_company_list:
         curr_company_df = top_company_df[top_company_df['company_name']==c]
@@ -220,7 +221,7 @@ app.layout = html.Div([
             ])
         ])
     ])
-], style={'background': '#f2f2f2', 'padding-top':'20px'})
+], style={'background': '#f2f2f2', 'padding-top':'20px', 'padding-bottom':'700px'})
 
 # Updates to dropdown menu and visualizations when filtering by domains ------------------------------------------
 @app.callback(
