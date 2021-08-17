@@ -1,8 +1,8 @@
 .page-header {
-    background-color: #4169e1;
+    background-color: #636EFA;
     margin-top: 0;
     margin-bottom: 0px;
-    padding: 20px 20px 20px 60px;
+    padding: 20px 100px 20px 100px;
 }
 
 .page-header h1,
@@ -22,8 +22,7 @@ h4 {
 }
 
 .navbar {
-    background-color: #475B5A;
-    padding-left: 60px;
+    padding: 0px 100px 0px 100px;
 }
 
 .navbar a,
@@ -36,12 +35,15 @@ h4 {
     margin-right: 25px;
 }
 
-.iframe {
-    margin-top: 0px;
-    padding-top: 0px;
+.content-page {
+    background: #FFFFFF;
+    padding-top: 20px;
 }
 
-.site-content {
-    margin-top: 30px;
-    padding-left: 60px;
+.dashboard-page {
+    background: #F2F2F2;
+}
+
+.team-member {
+    padding: 20px;
 }
