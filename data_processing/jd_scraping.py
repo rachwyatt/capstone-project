@@ -9,6 +9,8 @@ import pandas as pd
 from datetime import datetime
 import json
 from jd_parse_utils import get_skill_education
+from location_cleaning import single_location_clean
+from jd_cleaning import load_agency_city, clean_jd_process
 
 chromedriver_autoinstaller.install()
 today = str(datetime.now().date())
@@ -113,37 +115,41 @@ def parse_jd(soup):
     jd = soup.find('div', {'id': 'JobDescriptionContainer'})
     if not jd:
         return soup
+        
     children = []
-    for ch in jd.findChildren(recursive=False):
-        for ch2 in ch.findChildren(recursive=False):
-            ch3 = ch2.findChildren(recursive=False)
-            if ch3:
-                for x in ch3:
-                    children += x
-            else:
-                children += ch2
+    try:
+        for ch in jd.findChildren(recursive=False):
+            for ch2 in ch.findChildren(recursive=False):
+                ch3 = ch2.findChildren(recursive=False)
+                if ch3:
+                    for x in ch3:
+                        children += x
+                else:
+                    children += ch2
 
-    elements = []
-    for n, ch in enumerate(children):
-        try:
-            sub = ch.find_all('li')
-            if len(sub) > 1:
-                elements += sub
-            else:
+        elements = []
+        for n, ch in enumerate(children):
+            try:
+                sub = ch.find_all('li')
+                if len(sub) > 1:
+                    elements += sub
+                else:
+                    elements.append(ch)
+            except:
                 elements.append(ch)
-        except:
-            elements.append(ch)
 
-    jd_cleaned = []
-    for x in elements:
-        try:
-            txt = x.text.strip()
-            if txt != '':
-                jd_cleaned.append(txt)
-        except:
-            jd_cleaned.append(str(x).strip())
+        jd_cleaned = []
+        for x in elements:
+            try:
+                txt = x.text.strip()
+                if txt != '':
+                    jd_cleaned.append(txt)
+            except:
+                jd_cleaned.append(str(x).strip())
 
-    jd_cleaned = '\n'.join(jd_cleaned)
+        jd_cleaned = '\n'.join(jd_cleaned)
+    except:
+        return soup
 
     return jd_cleaned
 
@@ -168,6 +174,10 @@ def scrape_job_page(joblinks_batch):
     cleaned_dicts = [x for x in cleaned_dicts if x != {}]
     cleaned = pd.DataFrame(cleaned_dicts)
     cleaned.columns = ['job_title', 'company_name', 'location', 'job_description', 'meta']
+    
+    cleaned = df_location_clean(cleaned)
+    agencies, cities = load_agency_city()
+    data['cleaned_jd'] = data['job_description'].apply(lambda x: clean_jd_process(agencies, cities, x.lower()))
 
     metas = cleaned['meta'].tolist()
 
@@ -223,8 +233,9 @@ def insert_into_db(df):
     cursor = connection.cursor()
 
     sql = """INSERT INTO jd (crawl_timestamp, url, job_title, company_name,
-    post_date, job_description, job_type, job_board, location, skill, education) 
-    VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+    post_date, job_description, job_type, job_board, location, skill, education, 
+    city, state, country, cleaned_jd) 
+    VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
 
     dup_cnt = 0
     commit_cnt = 0
@@ -234,7 +245,7 @@ def insert_into_db(df):
             cursor.execute(sql, (data['crawl_timestamp'], data['url'], data['job_title'],
                                  data['company_name'], data['post_date'], data['job_description'],
                                  data['job_type'], data['job_board'], data['location'], data['skill'],
-                                 data['education']))
+                                 data['education'], data['city'], data['state'], data['country'], data['cleaned_jd']))
             connection.commit()
             commit_cnt += 1
         except pymysql.IntegrityError as err:
@@ -247,5 +258,9 @@ def insert_into_db(df):
 
 def main():
     job_links_batch = scrape_parent_links()
+    with open('temp.txt', 'w') as f:
+        f.write('\n'.join(job_links_batch))
+        f.close()
     df = scrape_job_page(job_links_batch)
+    df.to_csv('temp_csv.csv')
     insert_into_db(df)

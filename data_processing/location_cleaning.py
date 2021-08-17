@@ -41,11 +41,13 @@ def state_clean(x):
         return x
 
 
-def get_state_abbrev(x):
+def get_state_abbrev(x, state_abb):
     if x.upper() in state_abb:
         return state_abb[x.upper()]
     else:
         return x
+    
+
     
 
 def clean_location_db():
@@ -88,7 +90,7 @@ def clean_location_db():
 	temp.state = temp.state.str.replace('NEW YORK STATE', 'NEW YORK')
 	temp.state = temp.state.str.replace('WASHINGTON STATE', 'WASHINGTON')
 
-	temp.state = temp.state.apply(get_state_abbrev)
+	temp.state = temp.state.apply(lambda x: get_state_abbrev(x, state_abb))
 	temp.state = temp.state.apply(state_clean)
 
 
@@ -109,9 +111,41 @@ def clean_location_db():
 	connection.close()
 
 
+def df_location_clean(data):
+	data.state = data.location
+	country_dict, state_abb = get_country_state()
 
+	def get_state(x):
+	    return x.split(',')[-1].strip()
 
+	def get_city(x):
+	    return x.split(',')[0].strip()
 
+	data.country = "US"
+
+	data['state'] = data['state'].fillna('')
+
+	temp = data[data['state'].str.len()>2]
+    temp2 = data[data['state'].str.len()<=2]
+	## clean long state
+	temp = data[data['state'].str.contains(',')]
+	temp['city'] = temp['state'].apply(get_city)
+	temp['state'] = temp['state'].apply(get_state)
+
+	temp.state = temp.state.str.upper()
+	temp.state = temp.state.str.replace('NEW YORK STATE', 'NEW YORK')
+	temp.state = temp.state.str.replace('WASHINGTON STATE', 'WASHINGTON')
+
+	temp.state = temp.state.apply(lambda x: get_state_abbrev(x, state_abb))
+	temp.state = temp.state.apply(state_clean)
+    
+    df = pd.concat([temp, temp2])
+        
+    return df
+        
+    
+    
+    
 
 
 
