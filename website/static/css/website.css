@@ -45,5 +45,9 @@ h4 {
 }
 
 .team-member {
-    padding: 20px;
+    margin: 10px;
+}
+
+img {
+    margin-right: 15px;
 }
