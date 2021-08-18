@@ -23,7 +23,8 @@ nltk.download('averaged_perceptron_tagger')
 nltk.download('punkt')
 nltk.download('stopwords')
 
-#-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 def extract_relevantjobs(df, col=None):
     """
@@ -53,12 +54,9 @@ def extract_relevantjobs(df, col=None):
         
     return filtered_df
 
-#-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# SSE is the sum of the squared distance between centroid and each member of the cluster
-# One way to find the optimal clusters is by finding the elbow point using the SSE plot
-# As number of clusters increases (in KMeans model), SSE decreases and the "elbow point" is the point where SSE starts decreasing in linear manner
-# In other words, pick the value of k, where the average distance falls suddenly
+
+
 def generate_SSE_plot(data, max_k, model, RANDOM_SEED):
     """
       this function is to generate a SSE plot to find the optimal number of cluster either using MiniBatchKMeans or KMeans
@@ -88,12 +86,9 @@ def generate_SSE_plot(data, max_k, model, RANDOM_SEED):
     ax.set_ylabel('Sum of squared errors')
     ax.set_title('Clustering SSE vs. Number of Clusters')
 
-#-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# The silhouette plot shows how close each point in one cluster is to points in the neighboring clusters 
-# near +1 indicate that the sample is far away from the neighboring clusters
-# 0 indicates that the sample is on or very close to the decision boundary between two neighboring clusters
-# negative values indicate that those samples might have been assigned to the wrong cluster
+
+
 def generate_avg_silhouette_plot(data, max_k, model, RANDOM_SEED):
     """
       this function is to generate silhouette plot based on average silhouette score
@@ -128,7 +123,8 @@ def generate_avg_silhouette_plot(data, max_k, model, RANDOM_SEED):
     ax.set_ylabel('Average silhouette score')
     ax.set_title('Average Silhouette Score vs. Number of Clusters')
 
-#-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 # the code below is from https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html
 def generate_silhouette_plot(data, max_k, model, RANDOM_SEED):
@@ -188,7 +184,8 @@ def generate_silhouette_plot(data, max_k, model, RANDOM_SEED):
         ax.set_yticks([])  # Clear the yaxis labels / ticks
         ax.set_xticks([-0.1, 0, 0.2, 0.4, 0.6, 0.8, 1])
 
-#-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 def generate_tsne_pca_plot(data, pred_clusters, n_clusters, RANDOM_SEED):
     """
@@ -224,7 +221,8 @@ def generate_tsne_pca_plot(data, pred_clusters, n_clusters, RANDOM_SEED):
     ax[1].scatter(tsne[idx, 0], tsne[idx, 1], c=label_color)
     ax[1].set_title('TSNE Clustering Plot from 300 Random Samples')
 
-#-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 def get_top_keywords(data, pred_clusters, terms, n_terms):
     """
@@ -247,7 +245,8 @@ def get_top_keywords(data, pred_clusters, terms, n_terms):
         print('\nCluster {}'.format(i))
         print(','.join([terms[t] for t in np.argsort(r)[-n_terms:]]))
 
-#-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 def get_labels(domain_df, company_df, job_df, dropna=True):
     """
