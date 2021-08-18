@@ -51,3 +51,7 @@ h4 {
 img {
     margin-right: 15px;
 }
+
+.card-img-top {
+    padding: 30px 30px 0px 30px;
+}
