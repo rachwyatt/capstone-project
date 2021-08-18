@@ -58,7 +58,7 @@ To present the result in a meaningful way, we built a **dashboard that allow stu
     ```
     pip install -r requirements.txt
     ```
-* Obtain the .env file from a project member which contains the secret key and database connection credentials and place the file in the djangoapp directory (at the same level as settings.py).
+* Obtain the .env file from a project member which contains the secret key and database connection credentials and place the file in the djangoapp directory (at the same level as settings.py). Be sure to add the .env file to the .gitignore to avoid accidental publishing of these details.
 * To launch the Django app locally, navigate to the capstone-project directory and run:
 ```
 python manage.py runserver
