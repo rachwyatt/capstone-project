@@ -60,9 +60,9 @@ To present the result in a meaningful way, we built a **dashboard that allow stu
     ```
 * Obtain the .env file from a project member which contains the secret key and database connection credentials and place the file in the djangoapp directory (at the same level as settings.py). Be sure to add the .env file to the .gitignore to avoid accidental publishing of these details.
 * To launch the Django app locally, navigate to the capstone-project directory and run:
-```
-python manage.py runserver
-```
+   ```
+   python manage.py runserver
+   ```
 * The Dash app will run automatically within the Django app using the django-plotly-dash library, so there is no need to launch the Dash app separately.
 
 
