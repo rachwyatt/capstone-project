@@ -63,7 +63,7 @@ To present the result in a meaningful way, we built a **dashboard that allow stu
 ```
 python manage.py runserver
 ```
-* The Dash app will run automatically within the Django app using the django-plotly-dash library, so there is no need to launch the app separately.
+* The Dash app will run automatically within the Django app using the django-plotly-dash library, so there is no need to launch the Dash app separately.
 
 
 ## Authors
