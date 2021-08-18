@@ -235,7 +235,7 @@ app.layout = html.Div([
             ])
         ])
     ])
-], style={'background': '#f2f2f2', 'padding-top':'10px', 'padding-bottom':'700px'})
+], style={'background': '#f2f2f2', 'padding-top':'10px', 'padding-bottom':'600px'})
 
 # Updates to dropdown menu and visualizations when filtering by domains ------------------------------------------
 @app.callback(
