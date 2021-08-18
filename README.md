@@ -28,23 +28,43 @@ To present the result in a meaningful way, we built a **dashboard that allow stu
     * [pyldavis(2.1.2)](https://pyldavis.readthedocs.io/en/latest/readme.html)
 * Database connection:
     * [pymysql(1.0.2)](https://pypi.org/project/PyMySQL/)
+* Django and Plotly Dash requirements are listed in full in requirements.txt
 
-### Installing
+### Running Jupyter Notebooks
 
 * The libraries listed above include links to the documentations and can be installed using pip. 
 * Example of installing a pymysql package in jupyter notebook:
-```
-!pip install pymysql
-```
-
-### Executing program
-
+    ```
+    !pip install pymysql
+    ```
 * To run the notebooks in the *model_notebooks* folder, you will need to do the following: 
     1. Update the *config.json* file with the database connection information
     2. Download the [Common Crawl (42B tokens, 1.9M vocab, uncased, 300d vectors, 1.75 GB download)](https://nlp.stanford.edu/projects/glove/) - pretrained words embeddings used in *model_training_LDA_NMF* notebook. After you download the file, you will need to update the "file_path" inside *model_training_LDA_NMF* notebook:
         ```
         file_path = 'location you saved the embedding file'
         ```
+        
+### Running the Django App
+* Clone the github repository:
+    ```
+    git clone https://github.com/rachwyatt/capstone-project.git
+    ```
+* Create and activate a <a href='https://pypi.org/project/virtualenv/'>virtual environment</a> by running:
+    ```
+    virtualenv env --no-site-packages
+    source env/bin/activate
+    ```
+* Be sure that your active directory is the project directory (capstone-project) and install all required dependencies:
+    ```
+    pip install -r requirements.txt
+    ```
+* Obtain the .env file from a project member which contains the secret key and database connection credentials and place the file in the djangoapp directory (at the same level as settings.py).
+* To launch the Django app locally, navigate to the capstone-project directory and run:
+```
+python manage.py runserver
+```
+* The Dash app will run automatically within the Django app using the django-plotly-dash library, so there is no need to launch the app separately.
+
 
 ## Authors
 
