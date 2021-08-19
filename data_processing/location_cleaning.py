@@ -53,10 +53,11 @@ def get_state_abbrev(x, state_abb):
 def clean_location_db():
 	import pymysql.cursors
 	import pandas as pd
+    import db_info as db
 
-	connection = pymysql.connect(host="job-market.chfeqjbmewii.us-west-1.rds.amazonaws.com",
-	                             user="root",password="mads_capstone",database="capstone",
-	                             port=3306,charset='utf8mb4',
+	connection = pymysql.connect(host=db.DB_HOST,
+	                             user=db.DB_USER,password=db.DB_PASSWORD,database=db.DB_NAME,
+	                             port=db.DB_PORT,charset='utf8mb4',
 	                             cursorclass=pymysql.cursors.DictCursor)
 	cursor = connection.cursor()
 

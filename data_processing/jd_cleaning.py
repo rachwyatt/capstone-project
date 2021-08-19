@@ -234,12 +234,16 @@ def clean_jd_process(jd, agencies, cities):
 
 
 def update_database():
-
+    import db_info as db
     # load raw data from databse
-    connection = pymysql.connect(host="job-market.chfeqjbmewii.us-west-1.rds.amazonaws.com",
-                             user="root",password="mads_capstone",database="capstone",
-                             port=3306,charset='utf8mb4',
-                             cursorclass=pymysql.cursors.DictCursor)
+    connection = pymysql.connect(host=db.DB_HOST,
+                                user=db.DB_USER,
+                                password=db.DB_PASSWORD,
+                                database=db.DB_NAME,
+                                port=db.DB_PORT,
+                                charset='utf8mb4',
+                                cursorclass=pymysql.cursors.DictCursor)
+    
     cursor = connection.cursor()
     sql = """select id, job_description from jd;"""
     cursor.execute(sql)
@@ -252,10 +256,14 @@ def update_database():
     data['cleaned_jd'] = data['job_description'].apply(lambda x: clean_jd_process(agencies, cities, x.lower()))
 
     # insert the cleaned jds into db
-    connection = pymysql.connect(host="job-market.chfeqjbmewii.us-west-1.rds.amazonaws.com",
-                             user="root",password="mads_capstone",database="capstone",
-                             port=3306,charset='utf8mb4',
-                             cursorclass=pymysql.cursors.DictCursor)
+    connection = pymysql.connect(host=db.DB_HOST,
+                                user=db.DB_USER,
+                                password=db.DB_PASSWORD,
+                                database=db.DB_NAME,
+                                port=db.DB_PORT,
+                                charset='utf8mb4',
+                                cursorclass=pymysql.cursors.DictCursor)
+    
     cursor = connection.cursor()
 
     for i in tqdm(range(len(data))):

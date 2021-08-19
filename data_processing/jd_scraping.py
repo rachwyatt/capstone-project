@@ -225,11 +225,17 @@ def scrape_job_page(joblinks_batch):
 
 
 def insert_into_db(df):
+    import db_info as db
     print('Inserting into DB...')
 
-    connection = pymysql.connect(host="job-market.chfeqjbmewii.us-west-1.rds.amazonaws.com", user="root",
-                                 password="mads_capstone", database="capstone", port=3306,
-                                 charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
+    connection = pymysql.connect(host=db.DB_HOST,
+                                user=db.DB_USER,
+                                password=db.DB_PASSWORD,
+                                database=db.DB_NAME,
+                                port=db.DB_PORT,
+                                charset='utf8mb4',
+                                cursorclass=pymysql.cursors.DictCursor)
+    
     cursor = connection.cursor()
 
     sql = """INSERT INTO jd (crawl_timestamp, url, job_title, company_name,

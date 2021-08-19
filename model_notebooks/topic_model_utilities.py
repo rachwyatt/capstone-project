@@ -45,7 +45,9 @@ def train_model(vec_docs, n_topics, model_type, RANDOM_SEED):
 
     return model
 
-#----------------------------------------------------------------------------------------------------------------------------
+
+
+
 def get_top_terms(model, terms, no_top_words, display=False):
       """
         get the top terms from the trained LDA model or other topics model
@@ -70,8 +72,9 @@ def get_top_terms(model, terms, no_top_words, display=False):
 
       return top_terms
 
-#----------------------------------------------------------------------------------------------------------------------------
-# this function is taken from the Unsupervised Learning course homework
+
+
+
 def topical_coherence(words_list, embeddings_dict):
       """
         Helper function that use in the eval_topic_model() function below.
@@ -104,7 +107,10 @@ def topical_coherence(words_list, embeddings_dict):
       result = D.mean()
       
       return float(result), words_not_in_vec
-#----------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 def eval_topic_model(top_terms, embeddings_dict, display=True):
       """
         Evaluate topic model by calculating log-likelihood, preplexity, and coherence score
