@@ -1,7 +1,176 @@
 {% extends 'website/base.html' %}
 {% block content %}
-    <div class="content-page container">
-        <h3>Project Overview (Blog Post)</h3>
-        <p>Text here...</p>
+    <div class="content-page container blog-post">
+        <h2>Project Overview (Blog Post)</h2>
+        <p>
+            The goal of this project is to present an analysis of the recent data science related job market. As we approach the end of our MADS degree, we want to utilize our learned skills to help us get a better understanding of the current requirements on the market, meanwhile help everyone prepare themselves better for their dream position.
+        </p>
+        <p>
+            In summary, we scraped data science related job data from major job boards, cleaned them up for modeling, statistical analysis, and visualization. The main focus of our analysis is to find the popular skills required in different companies and domains, as data science itself is a large industry and spans across different function teams. Therefore, our analysis can help people understand more about what to expect for a certain domain’s data science position.
+        </p>
+        <h3>Project Data</h3>
+        <h5>Data Source Research</h5>
+        <p>
+            In the beginning of our project, we have listed our desired job boards for data scraping, as well as a list of potential APIs suggested by our instruction team, however, after some initial research, most APIs have very limited access on data downloading for free, also, simple requests scripts does not work on popular job boards as they do not allow scraping. The major researched job boards include:
+        </p>
+        <ul>
+            <li>
+                <b>Indeed:</b> API only available for people with ‘publisher ID’, which requires application, and your site must generate over 10,000 legitimate unique page views per day to qualify. Scraping not allowed with requests.
+            </li>
+            <li>
+                <b>LinkedIn:</b> No open API available, only for partnership websites. Anti-scraping with recaptcha.
+            </li>
+            <li>
+                <b>Unicorn hunt:</b> No open API available; Scraping not allowed with requests;
+            </li>
+            <li>
+                <b>LinkUp:</b> No open API available; Scraping not allowed with requests;
+            </li>
+            <li>
+                <b>Hackerrank:</b> No open API available, need to register for ‘work account’, which requires application.
+            </li>
+            <li>
+                <b>Stackoverflow:</b> No open API available; Scrapable with very limited rate;
+            </li>
+            <li>
+                <b>Adzuna:</b> Free API available, but with very limited rate (250 hits/day).
+            </li>
+            <li>
+                <b>Glassdoor:</b> No open API available; Scrapable with selenium.
+            </li>
+            <p>
+                Furthermore, we found some existing free data from the <a href="https://data.world" target="_blank">data world</a> website. However, as our focus is data science related positions, after filtering we are left with around 10,000 jobs from various files.
+            </p>
+        </ul>
+        <h5>Data Scraping and Cleaning</h5>
+        <p>
+            In the end, we developed a selenium scraper with glassdoor to get our main data with enough details. The detailed code can be viewed in the project's <a href="https://github.com/rachwyatt/capstone-project/blob/main/data_processing/jd_scraping.py" target="_blank">GitHub repository</a>.
+        </p>
+        <p>
+            We have collected a list of data science related job titles for the keyword variable when making requests to glassdoor, in order to reduce the range of scraping.
+        </p>
+        <p>
+            From the glassdoor raw data, the parsed data fields are: job_title, company_name, post_date, raw_job_description, job_type, and location; After getting the raw_job_description, further processing is needed to extract more details and store them systematically, because each job post have different description styles on the skills they require, as well as the education, experience etc. With the help of regular expression, we were able to extract skills and education requirements for each job description.
+        </p>
+        <p>
+            To prepare the data for model training, further cleaning is needed. Job descriptions often contain more than just the text that describes the job content, but also some disclaimers from the company about their policies and benefits etc. Such statements are just noise for our unsupervised models when doing clustering to find potential domains for the job description. Our initial model training shows that with max frequency from 0.5 to 0.6 in the tfidf/countvectorizer model, top words like ‘work’, ‘experience’ etc. still appeared in the LDA (or k-means) model’s top keywords in some clusters. More details will be illustrated in the following section. The irrelevant sections are then removed with the help of regex.
+        </p>
+        <h5>Data Storage and Retrieval</h5>
+        <p>
+            As we have data retrieved from different sources with different data formats, and they will finally be processed to a uniform format, it’s not ideal to save them as separate files on clouds. We have chosen to use the Amazon RDS (relational database service) as our data storage solution, which can be set up on your AWS.
+        </p>
+        <p>
+            With mysql RDS set up, we are able to connect the database from python code using packages like pymysql. With this, we can insert, retrieve, and modify data efficiently. Furthermore, we can easily manage duplicates by setting the job_url column to be unique, so when a new job description is being scraped and inserted, the database can automatically check duplicates with all existing data in the database efficiently, if duplicates are found, the insertion is aborted.
+        </p>
+        <p>
+            The major schema of the job description table is shown below:
+        </p>
+        <img src="static/img/db_schema.png" class="mx-auto d-block" width="50%">
+        <p>
+            The main challenge for us is to set up the RDS properly in AWS as we are new to the process. The official documentation does a good job on explaining the major steps, but there are some details not covered, especially on the inbound and outbound rule settings of security groups. Specifically, the public access should be turned on, and the traffic setting for inbound/outbound should be ‘all traffic’.
+        </p>
+        <p>
+            After the database is set, you can access with pymysql in python as mentioned above, or you can access through some user interface such as mysql workbench or sequel pro.
+        </p>
+        <h3>Modeling</h3>
+        <p>
+            The main objective of training models is to uncover domain information for the job postings data we gathered. One assumption we have at the beginning of this project is that job postings from the same domain should include similar terms in the job descriptions. For that reason, we trained unsupervised learning models to cluster job postings based on job descriptions.
+        </p>
+        <p>
+            The two primary methods used to transform job descriptions for the models:
+        </p>
+        <ul>
+            <li>
+                CountVectorizer - transforms text into a vector of the frequency of each token (TF), which is also known as the bag of words approach.
+            </li>
+            <li>
+                TfidfVectorizer - transforms text into a term frequency-inverse document frequency vector (TF-IDF) that weights each token frequency by the number of documents that token appears in.
+            </li>
+        </ul>
+        <h5>Unsupervised Learning Model</h5>
+        <p>
+            The one unsupervised learning model we trained is the <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.MiniBatchKMeans.html" target="_blank">Mini-Batch K-Means</a> model, which saves a substantial amount of computational time in comparison to the K-Means model. Unlike K-Means models, the Mini-Batch K-Means algorithm only uses small random batches of data at each iteration to update the clusters until convergence.  Similar to K-Means models, it is easy to implement and has minimal parameters to tune. The one important parameter required is the number of clusters (k). To find the best number of clusters to train our model, we used the “elbow” method and the average silhouette plot.
+        </p>
+        <img src="static/img/elbow_Kmeans.png" class="float-right" width="40%">
+        <p>
+            One way to find the optimal clusters is by finding the “elbow” point using the SSE plot. SSE is the sum of the squared distance between centroid and each member of the cluster. As the number of clusters increases, SSE decreases and the "elbow point" is the point where SSE starts decreasing in a linear manner. The SSE plot (Fig. A) we generated for the Mini-Batch K-Means models shows fourteen is the optimal number of clusters.
+        </p>
+        <p>
+            The second method we used to evaluate cluster quality is using the average silhouette plot. Silhouette score measures how close each point in one cluster is to points in the neighboring clusters. Data points with silhouette scores close to one indicate the data point is far away from the neighboring clusters; silhouette scores close to zero indicate the data point is on or very close to the decision boundary between two neighboring clusters; negative silhouette scores indicate the data point might have been assigned to the wrong cluster.
+        </p>
+        <p>
+            The average silhouette plot (Fig. B) generated with the Mini-Batch K-Means model is also showing the same optimal clusters as the SSE plot (Fig. A).
+        </p>
+        <img src="static/img/SS_Kmeans.png" class="mx-auto d-block" width="50%">
+        <p>
+            Based on the result from the two evaluation methods above, we decided to generate fourteen clusters with the Mini-Batch K-Means model. In order to label each cluster into a specific domain, we plotted a heatmap of the top ten terms for each cluster (Fig. C). The color is ranged from light yellow (low values) to blue (high values), and it is based on the weights of the terms in the given cluster. We labeled the cluster by looking at the distinct terms for each cluster. For example, “clinical”, “patients”, and “hospital” are terms that only belong to cluster 0 so we label the cluster as “healthcare”.
+        </p>
+        <img src="static/img/miniK_result.png" class="mx-auto d-block" width="75%">
+        <p>
+            The code for the Mini-Batch K-Means model can be found in the model_notebooks folder from our github repository. We also tried other unsupervised learning models such as Gaussian Mixture model and topic models (LDA, NMF). Although we are not including the result from the other unsupervised learning models in this blog, you can still check out the model notebooks in our repository.
+        </p>
+        <h5>Supervised Learning Model</h5>
+        <p>
+            In addition to the unsupervised learning models, we extracted companies’ industry information to use as labels from a <a href="https://www.kaggle.com/peopledatalabssf/free-7-million-company-dataset" target="_blank">companies dataset</a> found in Kaggle. Since there are over 100 different industries in the companies dataset, we decided to condense the list of industries into a smaller set of domains. For example, industries such as banking, insurance, financial services, investment management are all categorized as “finance”. After we categorized each industry into a specific domain, we ended up with twenty-three different domains. Then we merged the companies dataset with the job postings dataset by company’s name and ended up with 10,399 labeled data to use as our training set for supervised learning models.
+        </p>
+        <p>
+            The distribution of domains within our labeled dataset (Fig. D) shows that our labeled dataset is highly imbalanced. To ensure that both the training set and the test set contain approximately the same percentage of samples of each target domain, we enabled the parameter “stratify” from the train_test_split function.
+        </p>
+        <img src="static/img/domain_distribution.png" class="mx-auto d-block" width="75%">
+        <p>
+            One of the challenges of training supervised learning models is selecting the right model. With the limited time we had, we decided to only compare model performance on the four commonly used models for classification tasks. The four models are Multinomial Naive Bayes (to establish a baseline), Logistic Regression (linear model with regularization), K-Nearest Neighbors (simple to implement), and Random Forest Classifier (complex model with high performance). Since the labeled dataset is highly imbalanced, we used F-1 score to evaluate our models instead of accuracy. F-1 score is the harmonic mean of precision and recall. It is a measure that balances how precise the classifier is, as well as how robust the classifier is. The table below shows that the Random Forest Classifier outperformed the other three models with TF-IDF and the Logistic Regression performed the best with TF.
+        </p>
+        <img src="static/img/model_scores_table.png" class="mx-auto d-block" width="50%">
+        <p>
+            Based on the result, we used GridSearchCV from the sklearn library to tune the model parameters for both the Logistic Regression Model and the Random Forest Classifier. Here is a snippet of the code we used for Logistic Regression:
+        </p>
+        <img src="static/img/lr_tuning.png" class="mx-auto d-block" width="75%">
+        <p>
+            The final (best) trained model we used to classify our unlabeled dataset is a Logistic Regression model with parameters: C = 0.1 and solver = newton-cg.  With this model, we were able to achieve a F-1 score of 0.7227. You can find details of the code from our github repository.
+        </p>
+        <h5>Unsupervised Learning Model vs. Supervised Learning Model</h5>
+        <p>
+            Since our labeling method for clusters from the Mini-Batch K-Means model is simply based on the top ten terms for each cluster and is a subjective process, we are interested to see whether the labels we chose for the clusters match with the predictions from the Logistic Regression model. To compare the two models, we analyzed the count of job postings in each of the domains from both classifiers (Fig. E).
+        </p>
+        <p>
+            The first difference we noticed is the list of domains. The Mini-Batch K-Means model only produced eight domains because many of the clusters included terms related to the same specific domains. On the other hand, there are twenty-three domains (labels) used in the Logistic Regression model. Based on the heatmap below, we found that many of the domains for the Mini-Batch K-Means model do not match with the domains predicted from the Logistic Regression model. For example, the domain “education” from the Mini-Batch K-Means model includes a large number of job postings from the domain “human resources” based on the Logistic Regression.
+        </p>
+        <img src="static/img/comparison.png" class="mx-auto d-block" width="80%">
+        <h3>Data Dashboard</h3>
+        <h5>Technical Details</h5>
+        <p>
+            To display the results of our models and provide insights for those seeking jobs in data science, our team designed a dashboard using <a href="https://dash.plotly.com/" target="_blank">Plotly Dash</a>. In order to provide context for our dashboard, including this blog post, information about <a href="/team">our team</a>, and additional <a href="/details">project details</a>, we built a web application using the <a href="https://docs.djangoproject.com/en/3.2/" target="_blank">Django framework</a> and hosted it on <a href="https://www.heroku.com" target="_blank">Heroku</a>. To avoid running two Heroku Dyno instances (one for the Dash app and one for the Django app), we used the <a href="https://django-plotly-dash.readthedocs.io/en/latest/index.html" target="_blank">django-plotly-dash</a> library to run the Dash app within the Django app. Our dashboard also uses the <a href="https://dash-bootstrap-components.opensource.faculty.ai/docs/" target="_blank">dash-bootstrap-components</a> library to improve the appearance and layout, especially when viewing on mobile devices.
+        </p>
+        <p>
+            Many tutorials exist for implementing the tools used to publish our project outcomes. <a href="https://djangogirls.org/" target="_blank">Django Girls</a> provides an excellent tutorial for getting started with Django, which was extremely helpful to us. This is also a great tutorial to recommend for anyone just getting started with Python. If you are interested in dabbling in web development as a way to showcase your data science projects, the Django framework is a good place to start because it uses Python, which many data scientists are already experienced with.
+        </p>
+        <p>
+            Also helpful to our team was a <a href="https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Deployment" target="_blank">tutorial produced by Mozilla</a> which includes instructions for deploying Django apps to Heroku. It goes into detail about managing environment variables to help you avoid publishing details such as your username and password for your database connection. Heroku is user-friendly and integrates directly with GitHub, which is where our project code is stored.
+        </p>
+        <h5>Dashboard Insights</h5>
+        <p>
+            Exploring the dashboard provides users with many different types of insights to the data science job market. The logistic regression model results provide the default list of job domains, but the user can switch to using the mini-batch k-means model results to determine domains. The logistic regression results were chosen as the default because it provided a larger selection of domains and exploring the different visualizations in the dashboard showcases a more even distribution of companies across domains.
+        </p>
+        <p>
+            Some of the insights discoverable in our dashboard are not surprising. For example when filtering by domain, the map shows a large number of transportation jobs in Michigan and shows the top 5 companies for the education domain as being primarily major universities. When filtering by state, we see Apple show up in the top five companies in California and transportation is the second largest job domain in Michigan. Also, good news for MADS graduates, Python remains near the top of the list of most in demand data science skills with virtually any combination of filters.
+        </p>
+        <p>
+            We hope that this dashboard will provide our fellow graduating students with insights as to which additional skills to brush up on depending on what domain, region, or company they are interested in working for in the future.
+        </p>
+        <h3>Ethical Considerations</h3>
+        <p>
+            The most important caveat dashboard users should keep in mind is that the data reflected is frozen in time. Our data scraping provided a large data set to provide a broad overview of job postings from 2019-2021, but will not be continuously updated with realtime job posting data. Since the job market and most in demand skills are subject to change over time, the insights provided from the dashboard should be taken with a grain of salt. To ensure users are aware of this limitation, an alert appears at the top of the dashboard disclosing this information.
+        </p>
+        <img src="static/img/job_posts_by_year.png" class="float-right" width="30%">
+        <p>
+            An additional limitation of our data is that there is a very uneven distribution of dates the jobs were posted. This is due to the fact that a large set of data was provided by one of our team members from a previous project and is a little older, and we then scraped for additional more recent data, leaving a large gap missing from the timeline of job postings.
+        </p>
+        <p>
+            Future possible work would be to find data sources or APIs that would allow the dashboard to be continuously updated to provide more of a steady stream of data and insights to changes in the job market over time.
+        </p>
+        <h3>Statement of Work</h3>
+        <p>
+            Our team fell into very natural roles for this project with each member being very well suited for the work they took on. All work is our own, and no outside assistance was received other than bits of advice and guidance from course instructors.
+        </p>
     </div>
 {% endblock %}
