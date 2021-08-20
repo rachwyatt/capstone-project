@@ -17,15 +17,28 @@ app = DjangoDash('JobDashboard', external_stylesheets=external_stylesheets)
 df = pd.DataFrame(Jd.objects.all().values())
 
 # slit skills into list
-df['skill'] = df['skill'].str.split(', ')
+df['skill'] = df['skill'].str.title()\
+    .str.replace('Aws', 'AWS')\
+    .str.replace('Sql', 'SQL')\
+    .str.replace('Sas', 'SaS')\
+    .str.replace('Nlp', 'NLP')\
+    .str.split(', ')
+df = df.rename(columns={'skill':'Skill'})
 
 # clean up states a little
 df['state'] = df['state'].str.replace('US-', '')
 df['state'] = df['state'].astype(str)
 
 # get list of states for state filter
+state_names = pd.read_csv('state_abbrev.csv')
+state_names['name'] = state_names['name'].str.title()
 state_list = sorted([i for i in df['state'].unique() if (len(i) < 3) & (i not in ['', 'NN', 'UK', 'QC', 'NS',
                                                                                   'ON', 'BC', 'W', 'VI', 'PR'])])
+states = state_names[state_names['abbrev'].isin(state_list)]
+
+# Capitalize domains -------------------------------------------------------------------------------
+df['domain_lr'] = df['domain_lr'].str.title().str.replace('And ', 'and ')
+df['domain_minik'] = df['domain_minik'].str.title().str.replace('And ', 'and ')
 
 # Generate domain list for dropdown menu --------------------------------------------------------------
 def domain_list(model='domain_lr'):
@@ -39,11 +52,11 @@ def jobs_by_domain_barchart(model='domain_lr', state=None):
         df_domains = df[df['state'] == state]
     else:
         df_domains = df
-    df_domains = df_domains.groupby([model]).count().reset_index().rename(columns={'id':'count', model:'domain'}).\
-        sort_values(by='count', ascending=False)
+    df_domains = df_domains.groupby([model]).count().reset_index().rename(columns={'id':'Count', model:'Domain'}).\
+        sort_values(by='Count', ascending=False)
     return px.bar(df_domains,
-        x='domain',
-        y='count',
+        x='Domain',
+        y='Count',
         height=300).update_layout(margin_t=30).update_traces(marker_color='#636EFA')
 
 # top 20 in demand skills
@@ -54,15 +67,15 @@ def skills_barchart(domain=None, model='domain_lr', state=None):
         skills_df = df
     if state is not None:
         skills_df = skills_df[skills_df['state'] == state]
-    skills_df = skills_df.explode('skill')
-    skills_df_count = skills_df[skills_df['skill'].str.strip() != ''].groupby('skill')[
+    skills_df = skills_df.explode('Skill')
+    skills_df_count = skills_df[skills_df['Skill'].str.strip() != ''].groupby('Skill')[
         'id'].count().reset_index().rename(
-        columns={'id': 'count'})
-    skills_df_count = skills_df_count.sort_values(by='count', ascending=False).iloc[0:20].reset_index().drop(
+        columns={'id': 'Count'})
+    skills_df_count = skills_df_count.sort_values(by='Count', ascending=False).iloc[0:20].reset_index().drop(
         columns='index')
-    return px.bar(skills_df_count.sort_values(by='count'),
-                  x="count",
-                  y="skill",
+    return px.bar(skills_df_count.sort_values(by='Count'),
+                  x="Count",
+                  y="Skill",
                   orientation='h',
                   height=500).update_layout(margin_t=30, margin_b=0).update_traces(marker_color='#00CC96')
 
@@ -72,10 +85,10 @@ def jobs_by_state_map(domain=None, model='domain_lr'):
         state_count = df[df[model]==domain]
     else:
         state_count = df
-    state_count = state_count.groupby('state').count().reset_index().rename(columns={'id':'count'})
+    state_count = state_count.groupby('state').count().reset_index().rename(columns={'id':'Count'})
     return px.choropleth(state_count,
                         locations='state',
-                        color='count',
+                        color='Count',
                         locationmode='USA-states',
                         color_continuous_scale=['#636EFA', '#00CC96', '#FECB52', '#FFA15A', '#EF553B'],
                         scope='usa',
@@ -97,20 +110,20 @@ def top_company_skills_radar(domain=None, model='domain_lr', state=None):
     top_df['company_name'] = np.where(top_df['company_name'].str.contains('booz allen', case=False), 'Booz Allen Hamilton',
                                       top_df['company_name'])
     top_company_list = list(top_df[top_df['company_name'].notna()].groupby('company_name').count().reset_index()
-                         .rename(columns={'id':'count'}).sort_values(by='count', ascending=False).reset_index()
+                         .rename(columns={'id':'Count'}).sort_values(by='Count', ascending=False).reset_index()
                          .loc[0:4, 'company_name'])
 
     # get top skills within those companies
-    top_company_df = top_df[top_df['company_name'].isin(top_company_list)].explode('skill')
-    top_company_df['skill'] = np.where(top_company_df['skill'].str.contains('amazon web service', case=False),
-                              'amazon web service', top_company_df['skill'])
-    top_company_df = top_company_df[top_company_df['skill']!='']
-    top_skill_list = list(top_company_df.groupby('skill').count().reset_index().sort_values(by='id', ascending=False)
-                          .reset_index().loc[0:9, 'skill'])
+    top_company_df = top_df[top_df['company_name'].isin(top_company_list)].explode('Skill')
+    top_company_df['Skill'] = np.where(top_company_df['Skill'].str.contains('amazon web service', case=False),
+                              'amazon web service', top_company_df['Skill'])
+    top_company_df = top_company_df[top_company_df['Skill']!='']
+    top_skill_list = list(top_company_df.groupby('Skill').count().reset_index().sort_values(by='id', ascending=False)
+                          .reset_index().loc[0:9, 'Skill'])
 
     # filter to those skills
-    top_company_df = top_company_df[top_company_df['skill'].isin(top_skill_list)].groupby(['company_name',
-                                      'skill']).count().reset_index().rename(columns={'id':'count'})
+    top_company_df = top_company_df[top_company_df['Skill'].isin(top_skill_list)].groupby(['company_name',
+                                      'Skill']).count().reset_index().rename(columns={'id':'Count'})
     # radar plot
     radar_plot = go.Figure().update_layout(
         margin=dict(t=20, r=20, b=50, l=20),
@@ -126,8 +139,8 @@ def top_company_skills_radar(domain=None, model='domain_lr', state=None):
     for c in top_company_list:
         curr_company_df = top_company_df[top_company_df['company_name']==c]
         radar_plot.add_trace(go.Scatterpolar(
-            r=curr_company_df['count'],
-            theta=curr_company_df['skill'],
+            r=curr_company_df['Count'],
+            theta=curr_company_df['Skill'],
             name=c
         ))
     return radar_plot
@@ -174,7 +187,7 @@ app.layout = html.Div([
                     'Filter State:',
                     dcc.Dropdown(
                         id='state-selection',
-                        options=[{'label': i, 'value': i} for i in state_list],
+                        options=[{'label': name, 'value': abbrev} for name, abbrev in zip(states['name'], states['abbrev'])],
                         value=None
                     )
                 ], style={'width':'100%'}, id='state-tooltip'),
