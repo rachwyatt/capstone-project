@@ -148,7 +148,11 @@ def top_company_skills_radar(domain=None, model='domain_lr', state=None):
 # Dashboard Layout -------------------------------------------------------------------------------------------
 app.layout = html.Div([
     dbc.Container([
-        dbc.Alert('This dashboard does not reflect current job postings. The job posts in this data set were posted 2019-2021.',
+        dbc.Alert('This dashboard does not reflect current job postings but offers a broad look at jobs that were posted 2019-2021.'
+                  ' The job posts featured here are all data science related and were assigned domains (industries or sectors)'
+                  ' by using two different models: logistic regression and mini-batch k-means. Please explore the dashboard'
+                  ' to gather insights about the companies, states, and domains with the most data science job opportunities'
+                  ' as well as the most in demand skills in various domains and regions.',
                style={'text-align':'center'}, color='warning', dismissable=True),
         dbc.Row([
             dbc.Col([
