@@ -65,7 +65,7 @@
         <p>
             The major schema of the job description table is shown below:
         </p>
-        <img src="static/img/db_schema.png" class="mx-auto d-block" width="50%">
+        <img src="static/img/db_schema.png" class="mx-auto d-block" width="75%">
         <p>
             The main challenge for us is to set up the RDS properly in AWS as we are new to the process. The official documentation does a good job on explaining the major steps, but there are some details not covered, especially on the inbound and outbound rule settings of security groups. Specifically, the public access should be turned on, and the traffic setting for inbound/outbound should be ‘all traffic’.
         </p>
@@ -91,7 +91,7 @@
         <p>
             The one unsupervised learning model we trained is the <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.MiniBatchKMeans.html" target="_blank">Mini-Batch K-Means</a> model, which saves a substantial amount of computational time in comparison to the K-Means model. Unlike K-Means models, the Mini-Batch K-Means algorithm only uses small random batches of data at each iteration to update the clusters until convergence.  Similar to K-Means models, it is easy to implement and has minimal parameters to tune. The one important parameter required is the number of clusters (k). To find the best number of clusters to train our model, we used the “elbow” method and the average silhouette plot.
         </p>
-        <img src="static/img/elbow_Kmeans.png" class="float-right" width="40%">
+        <img src="static/img/SSE_plot_minik.png" class="float-right" width="40%">
         <p>
             One way to find the optimal clusters is by finding the “elbow” point using the SSE plot. SSE is the sum of the squared distance between centroid and each member of the cluster. As the number of clusters increases, SSE decreases and the "elbow point" is the point where SSE starts decreasing in a linear manner. The SSE plot (Fig. A) we generated for the Mini-Batch K-Means models shows fourteen is the optimal number of clusters.
         </p>
@@ -101,11 +101,11 @@
         <p>
             The average silhouette plot (Fig. B) generated with the Mini-Batch K-Means model is also showing the same optimal clusters as the SSE plot (Fig. A).
         </p>
-        <img src="static/img/SS_Kmeans.png" class="mx-auto d-block" width="50%">
+        <img src="static/img/avg_ss_plot_minik.png" class="mx-auto d-block" width="50%">
         <p>
             Based on the result from the two evaluation methods above, we decided to generate fourteen clusters with the Mini-Batch K-Means model. In order to label each cluster into a specific domain, we plotted a heatmap of the top ten terms for each cluster (Fig. C). The color is ranged from light yellow (low values) to blue (high values), and it is based on the weights of the terms in the given cluster. We labeled the cluster by looking at the distinct terms for each cluster. For example, “clinical”, “patients”, and “hospital” are terms that only belong to cluster 0 so we label the cluster as “healthcare”.
         </p>
-        <img src="static/img/miniK_result.png" class="mx-auto d-block" width="75%">
+        <img src="static/img/top_terms_minik.png" class="mx-auto d-block" width="75%">
         <p>
             The code for the Mini-Batch K-Means model can be found in the model_notebooks folder from our github repository. We also tried other unsupervised learning models such as Gaussian Mixture model and topic models (LDA, NMF). Although we are not including the result from the other unsupervised learning models in this blog, you can still check out the model notebooks in our repository.
         </p>
@@ -116,7 +116,7 @@
         <p>
             The distribution of domains within our labeled dataset (Fig. D) shows that our labeled dataset is highly imbalanced. To ensure that both the training set and the test set contain approximately the same percentage of samples of each target domain, we enabled the parameter “stratify” from the train_test_split function.
         </p>
-        <img src="static/img/domain_distribution.png" class="mx-auto d-block" width="75%">
+        <img src="static/img/job_post_by_domain.png" class="mx-auto d-block" width="75%">
         <p>
             One of the challenges of training supervised learning models is selecting the right model. With the limited time we had, we decided to only compare model performance on the four commonly used models for classification tasks. The four models are Multinomial Naive Bayes (to establish a baseline), Logistic Regression (linear model with regularization), K-Nearest Neighbors (simple to implement), and Random Forest Classifier (complex model with high performance). Since the labeled dataset is highly imbalanced, we used F-1 score to evaluate our models instead of accuracy. F-1 score is the harmonic mean of precision and recall. It is a measure that balances how precise the classifier is, as well as how robust the classifier is. The table below shows that the Random Forest Classifier outperformed the other three models with TF-IDF and the Logistic Regression performed the best with TF.
         </p>
@@ -135,7 +135,7 @@
         <p>
             The first difference we noticed is the list of domains. The Mini-Batch K-Means model only produced eight domains because many of the clusters included terms related to the same specific domains. On the other hand, there are twenty-three domains (labels) used in the Logistic Regression model. Based on the heatmap below, we found that many of the domains for the Mini-Batch K-Means model do not match with the domains predicted from the Logistic Regression model. For example, the domain “education” from the Mini-Batch K-Means model includes a large number of job postings from the domain “human resources” based on the Logistic Regression.
         </p>
-        <img src="static/img/comparison.png" class="mx-auto d-block" width="80%">
+        <img src="static/img/heatmap_domains.png" class="mx-auto d-block" width="80%">
         <h3>Data Dashboard</h3>
         <h5>Technical Details</h5>
         <p>
