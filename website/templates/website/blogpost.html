@@ -6,7 +6,10 @@
             The goal of this project is to present an analysis of the recent data science related job market. As we approach the end of our MADS degree, we want to utilize our learned skills to help us get a better understanding of the current requirements on the market, meanwhile help everyone prepare themselves better for their dream position.
         </p>
         <p>
-            In summary, we scraped data science related job data from major job boards, cleaned them up for modeling, statistical analysis, and visualization. The main focus of our analysis is to find the popular skills required in different companies and domains, as data science itself is a large industry and spans across different function teams. Therefore, our analysis can help people understand more about what to expect for a certain domain’s data science position.
+            During the search for data scientist related jobs, we found there are a large range of different directions and position titles, which can be confusing to people fresh to this industry. For example, what are the different skills required for data scientist vs. machine learning engineer, data analyst vs. data engineer etc. Furthermore, different companies may have different position titles for similar functionality. In our view, instead of focusing on position titles, we should focus on required skill sets for different industries/job functions, as they are the true key points employers want to evaluate. Furthermore, we will be utilizing the power of machine learning to cluster job postings and study corresponding skills to explore if there are interesting patterns.
+        </p>
+        <p>
+            In summary, we scraped data science related job data from major job boards, cleaned them up for modeling, statistical analysis, and visualization. The main focus of our analysis is to find the popular skills required in different companies and domains. Many job sites exist where job posts can be searched using a specific skill as a keyword, but this project’s goal is to provide insights about the most in demand skills across various data science domains. Therefore, our analysis can help people understand more about what to expect for a certain domain’s data science position.
         </p>
         <h3>Project Data</h3>
         <h5>Data Source Research</h5>
@@ -77,7 +80,7 @@
             The main objective of training models is to uncover domain information for the job postings data we gathered. One assumption we have at the beginning of this project is that job postings from the same domain should include similar terms in the job descriptions. For that reason, we trained unsupervised learning models to cluster job postings based on job descriptions.
         </p>
         <p>
-            The two primary methods used to transform job descriptions for the models:
+            The two primary methods used to vectorize job descriptions for the models:
         </p>
         <ul>
             <li>
@@ -118,7 +121,7 @@
         </p>
         <img src="static/img/job_post_by_domain.png" class="mx-auto d-block" width="75%">
         <p>
-            One of the challenges of training supervised learning models is selecting the right model. With the limited time we had, we decided to only compare model performance on the four commonly used models for classification tasks. The four models are Multinomial Naive Bayes (to establish a baseline), Logistic Regression (linear model with regularization), K-Nearest Neighbors (simple to implement), and Random Forest Classifier (complex model with high performance). Since the labeled dataset is highly imbalanced, we used F-1 score to evaluate our models instead of accuracy. F-1 score is the harmonic mean of precision and recall. It is a measure that balances how precise the classifier is, as well as how robust the classifier is. The table below shows that the Random Forest Classifier outperformed the other three models with TF-IDF and the Logistic Regression performed the best with TF.
+            One of the challenges of training supervised learning models is selecting the right model. With the limited time we had, we decided to only compare model performance on the four commonly used models for classification tasks. The four models are Multinomial Naive Bayes (to establish a baseline), Logistic Regression (have the option to add regularization to prevent overfitting), K-Nearest Neighbors (easy to implement and understand), and Random Forest Classifier (generally perform better than other classifiers and can handle dataset with high dimensionality). Since the labeled dataset is highly imbalanced, we used F-1 score to evaluate our models instead of accuracy. F-1 score is the harmonic mean of precision and recall. It is a measure that balances how precise the classifier is, as well as how robust the classifier is. The table below shows that the Random Forest Classifier outperformed the other three models with TF-IDF and the Logistic Regression performed the best with TF.
         </p>
         <img src="static/img/model_scores_table.png" class="mx-auto d-block" width="50%">
         <p>
