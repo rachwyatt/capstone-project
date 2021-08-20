@@ -153,7 +153,7 @@ app.layout = html.Div([
                   ' by using two different models: logistic regression and mini-batch k-means. Please explore the dashboard'
                   ' to gather insights about the companies, states, and domains with the most data science job opportunities'
                   ' as well as the most in demand skills in various domains and regions.',
-               style={'text-align':'center'}, color='warning', dismissable=True),
+                  color='warning', dismissable=True),
         dbc.Row([
             dbc.Col([
                 dbc.Row([
