@@ -16,9 +16,11 @@ app = DjangoDash('JobDashboard', external_stylesheets=external_stylesheets)
 # fetch the data
 df1 = pd.read_pickle('data1.pkl')
 df2 = pd.read_pickle('data2.pkl')
+df3 = pd.read_pickle('data3.pkl')
 df1 = pd.DataFrame(df1)
 df2 = pd.DataFrame(df2)
-df = pd.concat([df1, df2])
+df3 = pd.DataFrame(df3)
+df = pd.concat([df1, df2, df3])
 
 # split skills into list
 df['skill'] = df['skill'].str.title()\
