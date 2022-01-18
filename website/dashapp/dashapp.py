@@ -14,8 +14,11 @@ external_stylesheets = [dbc.themes.BOOTSTRAP]
 app = DjangoDash('JobDashboard', external_stylesheets=external_stylesheets)
 
 # fetch the data
-df = pd.read_pickle('jd_backup.pkl')
-df = pd.DataFrame(df)
+df1 = pd.read_pickle('data1.pkl')
+df2 = pd.read_pickle('data2.pkl')
+df1 = pd.DataFrame(df1)
+df2 = pd.DataFrame(df2)
+df = pd.concat([df1, df2])
 
 # split skills into list
 df['skill'] = df['skill'].str.title()\
