@@ -16,10 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-import website.dashapp
+import dashapp.dashapp
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('website.urls')),
+    path('', include('dashapp.urls')),
     path('django_plotly_dash/', include('django_plotly_dash.urls')),
 ]

@@ -1,22 +1,23 @@
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
 from django_plotly_dash import DjangoDash
 import dash_bootstrap_components as dbc
-from .models import Jd
+
 
 external_stylesheets = [dbc.themes.BOOTSTRAP]
 
 app = DjangoDash('JobDashboard', external_stylesheets=external_stylesheets)
 
 # fetch the data
-df = pd.DataFrame(Jd.objects.all().values())
+df = pd.read_pickle('jd_backup.pkl')
+df = pd.DataFrame(df)
 
-# slit skills into list
+# split skills into list
 df['skill'] = df['skill'].str.title()\
     .str.replace('Aws', 'AWS')\
     .str.replace('Sql', 'SQL')\
